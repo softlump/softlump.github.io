@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Featured Dojo Submissions Per Day</title>
+
+    <style>
+        html {
+            background:rgb(100,100,100);
+        }
+        body {           
+            color:rgb(0,0,0);
+            font-family: 'Consolas','Courier New', monospace;
+            font-size: 12px;
+            
+            padding:0;
+            margin:0;
+            top:0;
+            left:0;
+            width: 100%;
+            height: 100%;
+            background:rgb(100,100,100);
+            overflow:visible;
+        }
+        .toptext{
+            margin:13px 0 0 13px;
+            color:rgb(200,200,200);
+        }
+        .bottomtext{
+            margin:13px 0 0 13px;
+            color:rgb(200,200,200);
+        }
+        .container{
+            width:auto;
+            margin:0;
+            padding:15px;
+            height:auto;
+            /*border:1px solid red;*/
+            overflow:hidden;
+        }
+        .c2{background-color:rgb(95,95,95); }
+        .contest_display{
+            height:auto;
+            float:left;
+            padding:4px;
+            border:1px solid #444;
+            background:rgb(240,240,240);
+        }
+        .contest_data{
+            height:auto;
+            float:left;
+            padding:0 10px;
+            color:#ccc;
+        }
+        .pc{background-color:#525252;}
+        .ps{background-color:#3e70ec;}
+        .xb{background-color:#63d826;}
+        .sw{background-color:#e32525;}
+    </style>
+</head>
+<body>
+    <div class="toptext">
+        Featured Dojo Submissions Per Day<br>
+        <br>
+        Collected this to see trends over time, do an educated guess on total submissions on a given active contest.<br>
+        GMT +1 <br>
+    </div>
+    <div class="container">
+        <div id="Spring_2021" class="contest_display" style="width:330px;">txt</div>
+        <div id="Spring_2021_data" class="contest_data">...</div>
+    </div>
+    <div class="container c2">
+        <div id="Winter_2021" class="contest_display" style="width:330px;">txt</div>
+        <div id="Winter_2021_data" class="contest_data">...</div>
+    </div>
+    <div class="container">
+        <div id="Autumn_2020" class="contest_display" style="width:330px;">txt</div>
+        <div id="Autumn_2020_data" class="contest_data">...</div>
+    </div>
+    <div class="container c2">
+        <div id="Summer_2020" class="contest_display" style="width:330px;">txt</div>
+        <div id="Summer_2020_data" class="contest_data">...</div>
+    </div>
+    <div class="container">
+        <div id="Spring_2020" class="contest_display" style="width:330px;">txt</div>
+        <div id="Spring_2020_data" class="contest_data">...</div>
+    </div>
+    <div class="container c2">
+        <div id="Winter_2020" class="contest_display" style="width:330px;">txt</div>
+        <div id="Winter_2020_data" class="contest_data">...</div>
+    </div>
+    <div class="container">
+        <div id="Autumn_2019" class="contest_display" style="width:330px;">txt</div>
+        <div id="Autumn_2019_data" class="contest_data">...</div>
+    </div>
+    <div class="bottomtext">
+        SUMMER 2019 - 257<br>
+        SPRING 2019 - 170<br>
+        WINTER 2019 - 287<br>
+        REMASTER&nbsp;&nbsp;&nbsp; - 640<br>
+        <br>
+        <br>
+    </div>
+
+
+<script>
+    
+    class Entry {
+        constructor (contest, day, plat, tier) {
+            this.contest = contest;
+            this.day = day;
+            this.plat = plat;
+            this.tier = tier;
+        }
+    }
+
+    function AddSpace( c, max )
+    {
+        var txt = "";
+        for ( i=0; i<(max-c);i++){txt+="&nbsp;";}
+        return txt;
+    }
+
+    function AddCount( c )
+    {
+        if( c < 10 )
+        {
+            return "&nbsp;"+c;
+        }
+        else
+            return ""+c;
+    }
+
+    function AddSum( s )
+    {
+        var spacing = 5;
+        var txt = "";
+        spacing = spacing - s.toString().length;
+        for(i=0;i<spacing;i++){ txt+="&nbsp;" }
+        txt+=s;
+        return txt;
+    }
+
+    function PrintHeader( title, size )
+    {
+        var txt = "";
+        var tens = 0;
+        var number = title.length - 7;
+        txt += title;
+        for( i=0; i<(size+7)-title.length; i++ )
+        {
+            number ++; //Modulus Operator
+                if( number % 10 == 0 )
+                {
+                    tens++;
+                    txt+=tens;
+                }
+                else
+                    txt+="&nbsp;"
+            
+        }
+        txt+="<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; // 7 spaces
+        
+        for( i=0; i<size; i++ )
+        {
+            if( (i+1) % 5 == 0 )
+            {
+                if( (i+1) % 10 == 0 )
+                {
+                    txt+="0";
+                }
+                else
+                    txt+=".";
+            }
+            else
+            {
+                txt+="_";
+            }
+        }
+
+        txt+="&nbsp;+&nbsp;&nbsp;sum&nbsp;&nbsp;day<br>";
+        return txt;
+    }
+
+
+    function PrintDayBreakdown( contest, date, day, size, allEntries )
+    {
+        var txt = "";
+        var c = 0;
+        var symbol = "&nbsp;" // for easy iteration.
+        //var symbol = "." // for easy iteration.
+        var temp_entries = [];
+
+        txt += date+"&nbsp;";
+
+        for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; temp_entries.push(allEntries[i]); } } i=0;// collect all entries for the given day
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" ){ txt+="<span class=\"sw\">"+symbol+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" ){ txt+="<span class=\"xb\">"+symbol+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" ){ txt+="<span class=\"ps\">"+symbol+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" ){ txt+="<span class=\"pc\">"+symbol+"</span>"; } } i=0;
+        //for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; txt+=symbol; } }
+
+        txt += AddSpace(c,size);
+        txt += AddCount(c);
+        sum += c; c = 0;
+        txt += AddSum(sum);
+        txt += "&nbsp;&nbsp;"+day+"<br>";
+
+        return txt;
+    }
+    function PrintContestData( contest, allEntries )
+    {
+        var pc = 0;
+        var ps = 0;
+        var xb = 0;
+        var sw = 0;
+        var ghost = 0;
+        var shadow = 0;
+        var storm = 0;
+        var mountain = 0;
+        var moon = 0;
+
+        var week1 = 0;
+        var week2 = 0;
+        var week3 = 0;
+
+        for( i=0;i<allEntries.length;i++)
+        {
+            if( allEntries[i].contest == contest )
+            {
+                if( allEntries[i].plat == "pc" ){ pc++; }
+                if( allEntries[i].plat == "ps" ){ ps++; }
+                if( allEntries[i].plat == "xb" ){ xb++; }
+                if( allEntries[i].plat == "sw" ){ sw++; }
+                if( allEntries[i].tier == "gh" ){ ghost++; }// gh sh st mt mo
+                if( allEntries[i].tier == "sh" ){ shadow++; }
+                if( allEntries[i].tier == "st" ){ storm++; }
+                if( allEntries[i].tier == "mt" ){ mountain++; }
+                if( allEntries[i].tier == "mo" ){ moon++; }
+                if( allEntries[i].day == "1" || allEntries[i].day == "2"|| allEntries[i].day == "3"|| allEntries[i].day == "4"|| allEntries[i].day == "5"|| allEntries[i].day == "6"|| allEntries[i].day == "7" ){ week1++;}
+                if( allEntries[i].day == "5" || allEntries[i].day == "6"|| allEntries[i].day == "7"|| allEntries[i].day == "8"|| allEntries[i].day == "9"|| allEntries[i].day == "10"|| allEntries[i].day == "11"  ){ week2++;}
+                if( allEntries[i].day == "8" || allEntries[i].day == "9"|| allEntries[i].day == "10"|| allEntries[i].day == "11"|| allEntries[i].day == "12"|| allEntries[i].day == "13"|| allEntries[i].day == "14" || allEntries[i].day == "15" ){ week3++;}
+            }
+        }
+
+        return "Totals by Platform;<br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><br>Nintendo Switch:&nbsp;<b>"+sw+"</b><br><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b><br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
+    }
+
+    var entries = [];
+    //entries.push( new Entry("", "", "", "") );
+// ############################################################################## AUTUMN 2020 ########
+    entries.push( new Entry("AUTUMN 2019", "1", "xb", "gh") ); //8
+    entries.push( new Entry("AUTUMN 2019", "1", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "1", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "2", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "2", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "2", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "2", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "3", "xb", "gh") );// 10
+    entries.push( new Entry("AUTUMN 2019", "3", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2019", "3", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "3", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "3", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "3", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "3", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "3", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "4", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "4", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "4", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "4", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "4", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "5", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "5", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "5", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "5", "xb", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "5", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "5", "xb", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "6", "pc", "sh") );// 13
+    entries.push( new Entry("AUTUMN 2019", "6", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "6", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "7", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "7", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "7", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "7", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "7", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "7", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "7", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "8", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "8", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "8", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "8", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "9", "pc", "mt") );// 16
+    entries.push( new Entry("AUTUMN 2019", "9", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "9", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "9", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "9", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "10", "sw", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "10", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "10", "sw", "st") );
+    entries.push( new Entry("AUTUMN 2019", "10", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "10", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "10", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "10", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "10", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "10", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "11", "pc", "gh") );// 18
+    entries.push( new Entry("AUTUMN 2019", "11", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "11", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "11", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "11", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "11", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "11", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "11", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "12", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "12", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "12", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "12", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "12", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "12", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "12", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "13", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "13", "sw", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "13", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "13", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "13", "xb", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "14", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "xb", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "xb", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "sw", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2019", "14", "xb", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2019", "14", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "sw", "gh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "sw", "sh") );
+    entries.push( new Entry("AUTUMN 2019", "14", "sw", "st") );
+
+
+// ############################################################################## WINTER 2020 ########
+    entries.push( new Entry("WINTER 2020", "1", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "1", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "1", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "1", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "1", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "1", "xb", "st") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "gh") );// 1
+    entries.push( new Entry("WINTER 2020", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "2", "ps", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "2", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "2", "ps", "sh") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "3", "xb", "gh") );// 2
+    entries.push( new Entry("WINTER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "3", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "3", "xb", "gh") );
+    entries.push( new Entry("WINTER 2020", "3", "xb", "sh") );
+    entries.push( new Entry("WINTER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "4", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "4", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "4", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "4", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "mo") );
+    entries.push( new Entry("WINTER 2020", "4", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "5", "ps", "sh") );
+    entries.push( new Entry("WINTER 2020", "5", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "5", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "5", "xb", "sh") );
+    entries.push( new Entry("WINTER 2020", "5", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "6", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "6", "xb", "sh") );
+    entries.push( new Entry("WINTER 2020", "6", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "6", "ps", "sh") );
+    entries.push( new Entry("WINTER 2020", "6", "xb", "gh") );
+    entries.push( new Entry("WINTER 2020", "6", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "6", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "7", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "7", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "7", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "7", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "7", "ps", "st") );
+    entries.push( new Entry("WINTER 2020", "8", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "8", "ps", "mt") );
+    entries.push( new Entry("WINTER 2020", "8", "ps", "mo") );
+    entries.push( new Entry("WINTER 2020", "8", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "8", "xb", "sh") );
+    entries.push( new Entry("WINTER 2020", "8", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "8", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "9", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "9", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "9", "xb", "gh") );
+    entries.push( new Entry("WINTER 2020", "9", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "10", "xb", "st") );
+    entries.push( new Entry("WINTER 2020", "10", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "10", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "10", "ps", "st") );
+    entries.push( new Entry("WINTER 2020", "10", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "11", "sw", "st") );
+    entries.push( new Entry("WINTER 2020", "11", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "11", "ps", "mt") );
+    entries.push( new Entry("WINTER 2020", "12", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "12", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "12", "xb", "gh") );
+    entries.push( new Entry("WINTER 2020", "12", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "12", "ps", "st") );
+    entries.push( new Entry("WINTER 2020", "13", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "13", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "ps", "sh") );
+    entries.push( new Entry("WINTER 2020", "13", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "xb", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "mt") );
+    entries.push( new Entry("WINTER 2020", "13", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "st") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "mo") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "mo") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "sh") );
+    entries.push( new Entry("WINTER 2020", "14", "ps", "st") );
+    entries.push( new Entry("WINTER 2020", "14", "sw", "st") );
+    entries.push( new Entry("WINTER 2020", "14", "ps", "sh") );
+    entries.push( new Entry("WINTER 2020", "14", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "14", "sw", "st") );
+    entries.push( new Entry("WINTER 2020", "14", "xb", "st") );
+    entries.push( new Entry("WINTER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "gh") );
+    entries.push( new Entry("WINTER 2020", "14", "sw", "sh") );
+    entries.push( new Entry("WINTER 2020", "14", "xb", "mt") );
+    entries.push( new Entry("WINTER 2020", "14", "pc", "mo") );
+    entries.push( new Entry("WINTER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("WINTER 2020", "14", "xb", "sh") );
+    entries.push( new Entry("WINTER 2020", "14", "ps", "sh") );
+
+
+// ############################################################################## SPRING 2020 ########
+    entries.push( new Entry("SPRING 2020", "1", "pc", "st") );//9
+    entries.push( new Entry("SPRING 2020", "1", "xb", "st") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "mt") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "1", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "ps", "mt") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "1", "xb", "mt") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "2", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "mo") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "sw", "sh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "mt") );
+    entries.push( new Entry("SPRING 2020", "2", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "mo") );
+    entries.push( new Entry("SPRING 2020", "2", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "2", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "2", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "3", "pc", "sh") );// 11
+    entries.push( new Entry("SPRING 2020", "3", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "3", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "3", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "3", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "4", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "4", "sw", "gh") );
+    entries.push( new Entry("SPRING 2020", "4", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "4", "ps", "mo") );
+    entries.push( new Entry("SPRING 2020", "4", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "4", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "5", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "5", "sw", "st") );
+    entries.push( new Entry("SPRING 2020", "5", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "5", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "5", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "5", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "5", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "6", "pc", "gh") );// 14
+    entries.push( new Entry("SPRING 2020", "6", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "6", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "6", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "6", "xb", "mo") );
+    entries.push( new Entry("SPRING 2020", "6", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "6", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "7", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "7", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "8", "pc", "mt") );
+    entries.push( new Entry("SPRING 2020", "8", "xb", "st") );
+    entries.push( new Entry("SPRING 2020", "8", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "8", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "8", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "9", "ps", "mt") );// 17
+    entries.push( new Entry("SPRING 2020", "9", "pc", "mt") );
+    entries.push( new Entry("SPRING 2020", "9", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "9", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "9", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "9", "ps", "mt") );
+    entries.push( new Entry("SPRING 2020", "10", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "10", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "10", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "10", "sw", "sh") );
+    entries.push( new Entry("SPRING 2020", "11", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "11", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "11", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "11", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "11", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "11", "ps", "mo") );
+    entries.push( new Entry("SPRING 2020", "11", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "12", "xb", "sh") ); // 20
+    entries.push( new Entry("SPRING 2020", "12", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "12", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "12", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "12", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "12", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "12", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "12", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "12", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "12", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "12", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "12", "xb", "mt") );
+    entries.push( new Entry("SPRING 2020", "12", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "12", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "13", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "13", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "13", "ps", "mo") );
+    entries.push( new Entry("SPRING 2020", "13", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "13", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "13", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "13", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "13", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "13", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "13", "pc", "mt") );
+    entries.push( new Entry("SPRING 2020", "13", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "13", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "14", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "14", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "14", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "14", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "14", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "14", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "14", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "14", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "14", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "14", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "sh") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "mt") );
+    entries.push( new Entry("SPRING 2020", "15", "xb", "sh") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "st") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "sh") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "mt") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "st") );
+    entries.push( new Entry("SPRING 2020", "15", "xb", "gh") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "gh") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "gh") );
+    entries.push( new Entry("SPRING 2020", "15", "ps", "mt") );
+    entries.push( new Entry("SPRING 2020", "15", "pc", "gh") );
+// ############################################################################## SUMMER 2020 ########
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "gh") ); //14
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "1", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "1", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "1", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "1", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "2", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "2", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "3", "xb", "gh") );// 16
+    entries.push( new Entry("SUMMER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "3", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "xb", "st") );
+    entries.push( new Entry("SUMMER 2020", "3", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "3", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "3", "ps", "mo") );
+    entries.push( new Entry("SUMMER 2020", "4", "xb", "mt") );
+    entries.push( new Entry("SUMMER 2020", "4", "pc", "mt") );
+    entries.push( new Entry("SUMMER 2020", "4", "xb", "mt") );
+    entries.push( new Entry("SUMMER 2020", "4", "xb", "mo") );
+    entries.push( new Entry("SUMMER 2020", "4", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "4", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "4", "xb", "st") );
+    entries.push( new Entry("SUMMER 2020", "4", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "4", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "4", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "5", "ps", "mo") );//18
+    entries.push( new Entry("SUMMER 2020", "5", "xb", "mo") );
+    entries.push( new Entry("SUMMER 2020", "5", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "5", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "5", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "5", "sw", "st") );
+    entries.push( new Entry("SUMMER 2020", "5", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "5", "pc", "mt") );
+    entries.push( new Entry("SUMMER 2020", "5", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "6", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "6", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "6", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "6", "ps", "mo") );
+    entries.push( new Entry("SUMMER 2020", "6", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "6", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "6", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "6", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "7", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "7", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "7", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "7", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "7", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "7", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "7", "pc", "mt") );
+    entries.push( new Entry("SUMMER 2020", "8", "ps", "sh") );//21
+    entries.push( new Entry("SUMMER 2020", "8", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "8", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "8", "sw", "st") );
+    entries.push( new Entry("SUMMER 2020", "8", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "8", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "9", "sw", "mt") );
+    entries.push( new Entry("SUMMER 2020", "9", "xb", "st") );
+    entries.push( new Entry("SUMMER 2020", "9", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "9", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "9", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "9", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "9", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "10", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "10", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "10", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "10", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "10", "ps", "mo") );
+    entries.push( new Entry("SUMMER 2020", "10", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "10", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "10", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "10", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "10", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "11", "sw", "sh") );//24
+    entries.push( new Entry("SUMMER 2020", "11", "xb", "st") );
+    entries.push( new Entry("SUMMER 2020", "11", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "11", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "11", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "11", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "11", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "11", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "11", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "12", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "12", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "12", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "12", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "12", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "12", "xb", "st") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "12", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "mt") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "mo") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "13", "xb", "mt") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "13", "sw", "st") );
+    entries.push( new Entry("SUMMER 2020", "13", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "13", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "13", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "mt") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "mo") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "st") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "xb", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "ps", "gh") );
+    entries.push( new Entry("SUMMER 2020", "14", "xb", "sh") );
+    entries.push( new Entry("SUMMER 2020", "14", "pc", "sh") );
+
+
+// ############################################################################## AUTUMN 2020 ########
+    entries.push( new Entry("AUTUMN 2020", "1", "xb", "gh") );//13
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "1", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "1", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "1", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "sw", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "2", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "2", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "2", "sw", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "2", "sw", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "2", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "3", "ps", "st") );//15
+    entries.push( new Entry("AUTUMN 2020", "3", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "3", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "3", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "4", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "4", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "4", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "5", "sw", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "sw", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "5", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "5", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "6", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "6", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "6", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "6", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "6", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "6", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "7", "pc", "sh") );//19
+    entries.push( new Entry("AUTUMN 2020", "7", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "7", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "7", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "7", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "7", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "7", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "7", "xb", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "7", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "8", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "8", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "8", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "9", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "9", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "9", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "9", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "9", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "10", "ps", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "10", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "10", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "10", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "10", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "10", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "10", "xb", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "11", "xb", "st") );//23
+    entries.push( new Entry("AUTUMN 2020", "11", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "11", "xb", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "11", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "11", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "11", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "11", "xb", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "11", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "11", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "11", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "12", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "12", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "12", "sw", "st") );
+    entries.push( new Entry("AUTUMN 2020", "12", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "12", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "12", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "12", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "12", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "12", "pc", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "13", "sw", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "13", "xb", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "13", "ps", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "13", "xb", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "pc", "sh") );
+    entries.push( new Entry("AUTUMN 2020", "13", "xb", "st") );
+    entries.push( new Entry("AUTUMN 2020", "14", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "14", "pc", "st") );
+    entries.push( new Entry("AUTUMN 2020", "14", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "14", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "14", "ps", "st") );
+    entries.push( new Entry("AUTUMN 2020", "14", "pc", "mt") );
+    entries.push( new Entry("AUTUMN 2020", "14", "ps", "mo") );
+    entries.push( new Entry("AUTUMN 2020", "14", "ps", "gh") );
+    entries.push( new Entry("AUTUMN 2020", "14", "pc", "gh") );
+
+// ############################################################################## WINTER 2021 ########
+    entries.push( new Entry("WINTER 2021", "1", "pc", "mt") ); // 5
+    entries.push( new Entry("WINTER 2021", "1", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "1", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "1", "xb", "gh") );
+    entries.push( new Entry("WINTER 2021", "1", "xb", "st") );
+    entries.push( new Entry("WINTER 2021", "1", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "1", "xb", "gh") );
+    entries.push( new Entry("WINTER 2021", "1", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "1", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "1", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "1", "xb", "sh") );
+    entries.push( new Entry("WINTER 2021", "2", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "mt") );
+    entries.push( new Entry("WINTER 2021", "2", "sw", "gh") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "mt") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "2", "xb", "gh") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "mo") );
+    entries.push( new Entry("WINTER 2021", "2", "xb", "sh") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "mo") );
+    entries.push( new Entry("WINTER 2021", "2", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "2", "ps", "st") );
+    entries.push( new Entry("WINTER 2021", "3", "pc", "mo") );
+    entries.push( new Entry("WINTER 2021", "3", "pc", "mo") );
+    entries.push( new Entry("WINTER 2021", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "3", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "3", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "3", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "3", "sw", "st") );
+    entries.push( new Entry("WINTER 2021", "4", "sw", "gh") ); //8
+    entries.push( new Entry("WINTER 2021", "4", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "4", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "4", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "4", "xb", "gh") );
+    entries.push( new Entry("WINTER 2021", "4", "ps", "sh") );
+    entries.push( new Entry("WINTER 2021", "4", "xb", "sh") );
+    entries.push( new Entry("WINTER 2021", "5", "xb", "sh") );
+    entries.push( new Entry("WINTER 2021", "5", "xb", "mo") );
+    entries.push( new Entry("WINTER 2021", "6", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "6", "xb", "st") );
+    entries.push( new Entry("WINTER 2021", "7", "pc", "st") );//11
+    entries.push( new Entry("WINTER 2021", "8", "sw", "sh") );
+    entries.push( new Entry("WINTER 2021", "8", "pc", "mo") );
+    entries.push( new Entry("WINTER 2021", "8", "sw", "sh") );
+    entries.push( new Entry("WINTER 2021", "8", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "8", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "8", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "8", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "9", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "9", "ps", "st") );
+    entries.push( new Entry("WINTER 2021", "9", "ps", "mo") );
+    entries.push( new Entry("WINTER 2021", "9", "xb", "mt") );
+    entries.push( new Entry("WINTER 2021", "10", "xb", "mo") );//14
+    entries.push( new Entry("WINTER 2021", "10", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "10", "ps", "mo") );
+    entries.push( new Entry("WINTER 2021", "10", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "10", "ps", "st") );
+    entries.push( new Entry("WINTER 2021", "11", "ps", "sh") );
+    entries.push( new Entry("WINTER 2021", "11", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "11", "pc", "mt") );
+    entries.push( new Entry("WINTER 2021", "11", "xb", "st") );
+    entries.push( new Entry("WINTER 2021", "11", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "12", "ps", "st") );
+    entries.push( new Entry("WINTER 2021", "12", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "12", "pc", "mt") );
+    entries.push( new Entry("WINTER 2021", "12", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "12", "ps", "mo") );
+    entries.push( new Entry("WINTER 2021", "12", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "12", "pc", "mt") );
+    entries.push( new Entry("WINTER 2021", "12", "pc", "sh") );
+    entries.push( new Entry("WINTER 2021", "12", "xb", "sh") );
+    entries.push( new Entry("WINTER 2021", "13", "ps", "st") );
+    entries.push( new Entry("WINTER 2021", "13", "xb", "gh") );
+    entries.push( new Entry("WINTER 2021", "13", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "13", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "13", "ps", "sh") );
+    entries.push( new Entry("WINTER 2021", "13", "ps", "sh") );
+    entries.push( new Entry("WINTER 2021", "13", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "13", "ps", "sh") );
+    entries.push( new Entry("WINTER 2021", "13", "pc", "gh") );
+    entries.push( new Entry("WINTER 2021", "13", "xb", "st") );
+    entries.push( new Entry("WINTER 2021", "14", "sw", "st") );
+    entries.push( new Entry("WINTER 2021", "14", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "14", "ps", "mo") );
+    entries.push( new Entry("WINTER 2021", "14", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "14", "ps", "gh") );
+    entries.push( new Entry("WINTER 2021", "14", "ps", "st") );
+    entries.push( new Entry("WINTER 2021", "14", "pc", "st") );
+    entries.push( new Entry("WINTER 2021", "14", "xb", "st") );
+    entries.push( new Entry("WINTER 2021", "14", "pc", "sh") );
+
+// ############################################################################## SPRING 2021 ########
+    entries.push( new Entry("SPRING 2021", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "1", "xb", "sh") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "mt") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "1", "ps", "sh") );
+    entries.push( new Entry("SPRING 2021", "1", "xb", "gh") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "1", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "2", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "2", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "2", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "2", "ps", "sh") );
+    entries.push( new Entry("SPRING 2021", "2", "pc", "mo") );
+    entries.push( new Entry("SPRING 2021", "2", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "2", "ps", "gh") );
+    entries.push( new Entry("SPRING 2021", "2", "ps", "mo") );
+    entries.push( new Entry("SPRING 2021", "3", "pc", "mt") );
+    entries.push( new Entry("SPRING 2021", "3", "pc", "mo") );
+    entries.push( new Entry("SPRING 2021", "3", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "3", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "3", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "4", "pc", "mt") );
+    entries.push( new Entry("SPRING 2021", "4", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "4", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "5", "xb", "mt") );
+    entries.push( new Entry("SPRING 2021", "5", "pc", "mo") );
+    entries.push( new Entry("SPRING 2021", "5", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "5", "ps", "sh") );
+    entries.push( new Entry("SPRING 2021", "5", "sw", "mo") );
+    entries.push( new Entry("SPRING 2021", "5", "pc", "mt") );
+    entries.push( new Entry("SPRING 2021", "6", "ps", "st") );
+    entries.push( new Entry("SPRING 2021", "6", "pc", "mt") );
+    entries.push( new Entry("SPRING 2021", "6", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "6", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "6", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "7", "xb", "mo") );
+    entries.push( new Entry("SPRING 2021", "7", "xb", "st") );
+    entries.push( new Entry("SPRING 2021", "7", "ps", "mo") );
+    entries.push( new Entry("SPRING 2021", "7", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "8", "pc", "gh") );
+    entries.push( new Entry("SPRING 2021", "8", "ps", "sh") );
+    entries.push( new Entry("SPRING 2021", "9", "ps", "mo") );
+    entries.push( new Entry("SPRING 2021", "9", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "9", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "9", "pc", "sh") );
+    entries.push( new Entry("SPRING 2021", "10", "ps", "st") );//16 
+    entries.push( new Entry("SPRING 2021", "10", "ps", "gh") );
+    entries.push( new Entry("SPRING 2021", "10", "ps", "sh") );
+    entries.push( new Entry("SPRING 2021", "10", "sw", "gh") );
+    entries.push( new Entry("SPRING 2021", "10", "xb", "st") );
+    entries.push( new Entry("SPRING 2021", "10", "pc", "st") );
+    entries.push( new Entry("SPRING 2021", "11", "ps", "gh") );
+    entries.push( new Entry("SPRING 2021", "11", "pc", "mt") ); // Zhorkth
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+    entries.push( new Entry("SPRING 2021", "", "", "") );
+
+
+// gh sh st mt mo
+// pc ps xb sw
+
+    var text = "";
+    var size = 0; 
+    var sum = 0;
+    var thisContest = "";
+
+//var days = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+
+    thisContest = "SPRING 2021";
+    var days = ["May 07", "May 08", "May 09", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17", "May 18", "May 19", "May 20"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Spring_2021").innerHTML = text;
+    document.getElementById("Spring_2021_data").innerHTML = PrintContestData(thisContest,entries);
+
+
+    thisContest = "WINTER 2021";
+    var days = ["Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Winter_2021").innerHTML = text;
+    document.getElementById("Winter_2021_data").innerHTML = PrintContestData(thisContest,entries);
+
+
+    thisContest = "AUTUMN 2020";
+    var days = ["Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21", "Nov 22", "Nov 23", "Nov 24", "Nov 25", "Nov 26"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Autumn_2020").innerHTML = text;
+    document.getElementById("Autumn_2020_data").innerHTML = PrintContestData(thisContest,entries);
+
+
+    thisContest = "SUMMER 2020";
+    var days = ["Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24", "Aug 25", "Aug 26", "Aug 27"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Summer_2020").innerHTML = text;
+    document.getElementById("Summer_2020_data").innerHTML = PrintContestData(thisContest,entries);
+
+
+    thisContest = "SPRING 2020";
+    var days = ["Apr 09", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Spring_2020").innerHTML = text;
+    document.getElementById("Spring_2020_data").innerHTML = PrintContestData(thisContest,entries);
+
+
+    thisContest = "WINTER 2020";
+    var days = ["Jan 31", "Feb 01", "Feb 02", "Feb 03", "Feb 04", "Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Winter_2020").innerHTML = text;
+    document.getElementById("Winter_2020_data").innerHTML = PrintContestData(thisContest,entries);
+
+    thisContest = "AUTUMN 2019";
+    var days = ["Nov 08", "Nov 09", "Nov 10", "Nov 11", "Nov 12", "Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Autumn_2019").innerHTML = text;
+    document.getElementById("Autumn_2019_data").innerHTML = PrintContestData(thisContest,entries);
+</script>
+
+
+</body>
+</html>
