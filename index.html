@@ -198,18 +198,12 @@
         return temp;
     }
 
-
     function PrintDayBreakdown( contest, date, day, size, allEntries )
     {
         var txt = "";
         var c = 0;
         var symbol = "&nbsp;" 
-        var symbol_gh = "&nbsp;";
-        var symbol_sh = "-";
-        var symbol_st = "=";
-        var symbol_mt = "&equiv;";
-        var symbol_mo = "&deg;";
-// -+xX#
+
         var temp_entries = [];
 
         txt += date+"&nbsp;";
@@ -219,7 +213,6 @@
         for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" ){ txt+="<span class=\"xb\">"+symbol+"</span>"; } } i=0;
         for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" ){ txt+="<span class=\"ps\">"+symbol+"</span>"; } } i=0;
         for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" ){ txt+="<span class=\"pc\">"+symbol+"</span>"; } } i=0;
-
         //for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; txt+=symbol; } }
 
         txt += AddSpace(c,size);
@@ -1234,10 +1227,7 @@
     entries.push( new Entry("SPRING 2021", "", "", "") );
     entries.push( new Entry("SPRING 2021", "", "", "") );
     entries.push( new Entry("SPRING 2021", "", "", "") );
-
-//  -+xXO .: -=# xXO I T Y X H  -+=#0|
-// gh sh st mt mo
-// pc ps xb sw
+    //entries.push( new Entry("", "", "", "") );
 
     var text = "";
     var size = 0; 
@@ -1328,7 +1318,6 @@
     document.getElementById("Autumn_2019").innerHTML = text;
     document.getElementById("Autumn_2019_data").innerHTML = PrintContestData(thisContest,entries);
 </script>
-
 
 </body>
 </html>
