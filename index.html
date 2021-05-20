@@ -55,10 +55,10 @@
             padding:0 10px;
             color:#ccc;
         }
-        .pc{background-color:#525252;}
-        .ps{background-color:#3e70ec;}
-        .xb{background-color:#63d826;}
-        .sw{background-color:#e32525;}
+        .pc{background-color:#525252;color:#919191;}
+        .ps{background-color:#3e70ec;color:#3d5591;}
+        .xb{background-color:#63d826;color:#487531;}
+        .sw{background-color:#e32525;color:#723c3c;}
     </style>
 </head>
 <body>
@@ -68,7 +68,9 @@
         Collected this to see trends over time, do an educated guess on total submissions on a given active contest.<br>
         GMT +1, meaning that day 1 only covers about 5h, from 19:00 until 00:00. The last day represents 19h, as the threads close at 19:00 GMT+1.<br>
         <br>
-        PC:<span class="pc">&nbsp;</span> PlayStation:<span class="ps">&nbsp;</span> Xbox:<span class="xb">&nbsp;</span> Nintendo Switch:<span class="sw">&nbsp;</span>
+        PC:<span class="pc">&nbsp;</span> PlayStation:<span class="ps">&nbsp;</span> Xbox:<span class="xb">&nbsp;</span> Nintendo Switch:<span class="sw">&nbsp;</span><br>
+        Moon:<span class="pc">&deg;</span> Mountain:<span class="pc">&equiv;</span> Storm:<span class="pc">=</span> Shadow:<span class="pc">-</span> Ghost<span class="pc">&nbsp;</span>
+
     </div>
     <div class="container">
         <div id="Spring_2021" class="contest_display" style="width:330px;">txt</div>
@@ -193,18 +195,51 @@
     {
         var txt = "";
         var c = 0;
-        var symbol = "&nbsp;" // for easy iteration.
-        //var symbol = "." // for easy iteration.
+        var symbol = "&nbsp;" 
+        var symbol_gh = "&nbsp;";
+        var symbol_sh = "-";
+        var symbol_st = "=";
+        var symbol_mt = "&equiv;";
+        var symbol_mo = "&deg;";
+// -+xX#
         var temp_entries = [];
 
         txt += date+"&nbsp;";
 
-        for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; temp_entries.push(allEntries[i]); } } i=0;// collect all entries for the given day
-        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" ){ txt+="<span class=\"sw\">"+symbol+"</span>"; } } i=0;
-        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" ){ txt+="<span class=\"xb\">"+symbol+"</span>"; } } i=0;
-        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" ){ txt+="<span class=\"ps\">"+symbol+"</span>"; } } i=0;
-        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" ){ txt+="<span class=\"pc\">"+symbol+"</span>"; } } i=0;
+ //       for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; temp_entries.push(allEntries[i]); } } i=0;// collect all entries for the given day
+ //       for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" ){ txt+="<span class=\"sw\">"+symbol+"</span>"; } } i=0;
+ //       for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" ){ txt+="<span class=\"xb\">"+symbol+"</span>"; } } i=0;
+ //       for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" ){ txt+="<span class=\"ps\">"+symbol+"</span>"; } } i=0;
+ //       for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" ){ txt+="<span class=\"pc\">"+symbol+"</span>"; } } i=0;
+
         //for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; txt+=symbol; } }
+
+
+        for ( i=0; i<allEntries.length; i++ ){ if( allEntries[i].contest == contest && allEntries[i].day == day ){ c++; temp_entries.push(allEntries[i]); } } i=0;// collect all entries for the given day
+
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" && temp_entries[i].tier == "mo" ){ txt+="<span class=\"sw\">"+symbol_mo+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" && temp_entries[i].tier == "mt" ){ txt+="<span class=\"sw\">"+symbol_mt+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" && temp_entries[i].tier == "st" ){ txt+="<span class=\"sw\">"+symbol_st+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" && temp_entries[i].tier == "sh" ){ txt+="<span class=\"sw\">"+symbol_sh+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "sw" && temp_entries[i].tier == "gh" ){ txt+="<span class=\"sw\">"+symbol_gh+"</span>"; } } i=0;
+
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" && temp_entries[i].tier == "mo" ){ txt+="<span class=\"xb\">"+symbol_mo+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" && temp_entries[i].tier == "mt" ){ txt+="<span class=\"xb\">"+symbol_mt+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" && temp_entries[i].tier == "st" ){ txt+="<span class=\"xb\">"+symbol_st+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" && temp_entries[i].tier == "sh" ){ txt+="<span class=\"xb\">"+symbol_sh+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "xb" && temp_entries[i].tier == "gh" ){ txt+="<span class=\"xb\">"+symbol_gh+"</span>"; } } i=0;
+
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" && temp_entries[i].tier == "mo" ){ txt+="<span class=\"ps\">"+symbol_mo+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" && temp_entries[i].tier == "mt" ){ txt+="<span class=\"ps\">"+symbol_mt+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" && temp_entries[i].tier == "st" ){ txt+="<span class=\"ps\">"+symbol_st+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" && temp_entries[i].tier == "sh" ){ txt+="<span class=\"ps\">"+symbol_sh+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "ps" && temp_entries[i].tier == "gh" ){ txt+="<span class=\"ps\">"+symbol_gh+"</span>"; } } i=0;
+
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" && temp_entries[i].tier == "mo" ){ txt+="<span class=\"pc\">"+symbol_mo+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" && temp_entries[i].tier == "mt" ){ txt+="<span class=\"pc\">"+symbol_mt+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" && temp_entries[i].tier == "st" ){ txt+="<span class=\"pc\">"+symbol_st+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" && temp_entries[i].tier == "sh" ){ txt+="<span class=\"pc\">"+symbol_sh+"</span>"; } } i=0;
+        for ( ; i<temp_entries.length; i++ ){ if( temp_entries[i].plat == "pc" && temp_entries[i].tier == "gh" ){ txt+="<span class=\"pc\">"+symbol_gh+"</span>"; } } i=0;
 
         txt += AddSpace(c,size);
         txt += AddCount(c);
@@ -1167,7 +1202,7 @@
     entries.push( new Entry("SPRING 2021", "", "", "") );
     entries.push( new Entry("SPRING 2021", "", "", "") );
 
-
+//  -+xXO .: -=# xXO I T Y X H  -+=#0|
 // gh sh st mt mo
 // pc ps xb sw
 
