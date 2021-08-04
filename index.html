@@ -20,8 +20,8 @@
             margin:0;
             top:0;
             left:0;
-            width: 100%;
-            height: 100%;
+            width: 96%;
+            height: auto;
             background:rgb(100,100,100);
             overflow:visible;
         }
@@ -42,6 +42,7 @@
             height:auto;
             /*border:1px solid red;*/
             overflow:hidden;
+            background-color:rgb(90,90,90);
         }
         .c2{background-color:rgb(95,95,95); }
         .contest_display{
@@ -89,6 +90,7 @@
         <br>
         PC:<span class="pc">&nbsp;</span> PlayStation:<span class="ps">&nbsp;</span> Xbox:<span class="xb">&nbsp;</span> Nintendo Switch:<span class="sw">&nbsp;</span><br><br>
     </div>
+    
     <div class="container c2">
         <div id="Spring_2021" class="contest_display">txt</div>
         <div id="Spring_2021_data" class="contest_data">...</div>
@@ -1259,6 +1261,10 @@
     entries.push( new Entry("SPRING 2021", "14", "pc", "mo") );
     entries.push( new Entry("SPRING 2021", "14", "xb", "mo") );
 
+
+// ############################################################################## SPRING 2021 ########
+    entries.push( new Entry("SUMMER 2021", "1", "pc", "gh") );
+
     //entries.push( new Entry("", "", "", "") );
 
     var text = "";
@@ -1267,6 +1273,18 @@
     var thisContest = "";
 
 //var days = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+
+    thisContest = "SUMMER 2021";
+    var days = ["Aug 06", "Aug 07", "Aug 08", "Aug 09", "Aug 10", "Aug 11", "Aug 12", "Aug 13", "Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19"];
+    size = 30;
+    // reset some variables..
+    sum = 0;
+    text = "";
+    text += PrintHeader( thisContest, size );
+    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
+    document.getElementById("Summer_2021").innerHTML = text;
+    document.getElementById("Summer_2021_data").innerHTML = PrintContestData(thisContest,entries);
+
 
     thisContest = "SPRING 2021";
     var days = ["May 07", "May 08", "May 09", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17", "May 18", "May 19", "May 20"];
