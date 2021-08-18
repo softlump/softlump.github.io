@@ -292,6 +292,9 @@
         var mountain = 0;
         var moon = 0;
 
+        var unclear = 0;
+        var unclear_txt = "";
+
         var week1 = 0;
         var week2 = 0;
         var week3 = 0;
@@ -309,6 +312,7 @@
                 if( allEntries[i].tier == "st" ){ storm++; }
                 if( allEntries[i].tier == "mt" ){ mountain++; }
                 if( allEntries[i].tier == "mo" ){ moon++; }
+                if( allEntries[i].tier == "xx" ){ unclear++; }
                 if( allEntries[i].day == "1" || allEntries[i].day == "2"|| allEntries[i].day == "3"|| allEntries[i].day == "4"|| allEntries[i].day == "5"|| allEntries[i].day == "6"|| allEntries[i].day == "7" ){ week1++;}
                 if( allEntries[i].day == "5" || allEntries[i].day == "6"|| allEntries[i].day == "7"|| allEntries[i].day == "8"|| allEntries[i].day == "9"|| allEntries[i].day == "10"|| allEntries[i].day == "11"  ){ week2++;}
                 if( allEntries[i].day == "8" || allEntries[i].day == "9"|| allEntries[i].day == "10"|| allEntries[i].day == "11"|| allEntries[i].day == "12"|| allEntries[i].day == "13"|| allEntries[i].day == "14" || allEntries[i].day == "15" ){ week3++;}
@@ -340,8 +344,13 @@
         sw_mt = MakeString(sw_mt);
         sw_mo = MakeString(sw_mo);
 
+        if(unclear != 0)
+        {
+            unclear_txt = "<br><i class=\"shade\">Unclear:&nbsp;&nbsp;<b>"+unclear+"</b></i>";
+        }
 
-        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"</span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"</span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"</span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"</span><br><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b><br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
+
+        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"</span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"</span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"</span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"</span><br><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
     }
 
     var entries = [];
@@ -1310,6 +1319,9 @@
     entries.push( new Entry("SUMMER 2021", "5", "sw", "sh") );//(NSW)OinTygon
     entries.push( new Entry("SUMMER 2021", "6", "ps", "mo") );//(PSN)Wolf_von_Saturn
     entries.push( new Entry("SUMMER 2021", "6", "pc", "st") );//jackily6699
+    entries.push( new Entry("SUMMER 2021", "6", "xb", "sh") );//(XBOX)DarknessZeref
+    entries.push( new Entry("SUMMER 2021", "6", "xb", "xx") );//(XBOX)beduch7 , no info ####################### UNCLEAR
+    entries.push( new Entry("SUMMER 2021", "6", "pc", "gh") );//_humanophobia
     //entries.push( new Entry("SUMMER 2021", "6", "pc", "gh") );//
 
     //entries.push( new Entry("SUMMER 2021", "4", "pc", "gh") );//
