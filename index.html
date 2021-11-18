@@ -88,8 +88,8 @@
         .ps{background-color:#3e70ec;color:#3d5591;}
         .xb{background-color:#63d826;color:#487531;}
         .sw{background-color:#e32525;color:#723c3c;}
-        .shade{opacity:0.6;}
-        .shade2{opacity:0.2;}
+        .shade{opacity:0.7;}
+        .shade2{opacity:0.4;}
     </style>
 </head>
 <body>
@@ -249,7 +249,13 @@
         else if( temp.length == 3 ){ temp = "&nbsp;"+temp; }
         return temp;
     }
-
+    function MakeStringProportion( value )
+    {
+        var temp = value.toString();
+        if( temp.length == 1 ){ temp = "&nbsp;&nbsp;"+temp+"%"; }
+        else if( temp.length == 2 ){ temp = "&nbsp;"+temp+"%"; }
+        return temp;
+    }
     function PrintDayBreakdown( contest, date, day, size, allEntries )
     {
         var txt = "";
@@ -307,6 +313,17 @@
         var mountain = 0;
         var moon = 0;
 
+        var prop_pc = 0;
+        var prop_ps = 0;
+        var prop_xb = 0;
+        var prop_sw = 0;
+        var prop_gh = 0;
+        var prop_sh = 0;
+        var prop_st = 0;
+        var prop_mt = 0;
+        var prop_mo = 0;
+        var total_entries = 0;
+
         var unclear = 0;
         var unclear_txt = "";
 
@@ -333,6 +350,18 @@
                 if( allEntries[i].day == "8" || allEntries[i].day == "9"|| allEntries[i].day == "10"|| allEntries[i].day == "11"|| allEntries[i].day == "12"|| allEntries[i].day == "13"|| allEntries[i].day == "14" || allEntries[i].day == "15" ){ week3++;}
             }
         }
+        // Calculate Proportions
+        total_entries = ghost + shadow + storm + mountain + moon;
+        prop_pc = Math.round( pc/total_entries*100 );
+        prop_ps = Math.round( ps/total_entries*100 );
+        prop_xb = Math.round( xb/total_entries*100 );
+        prop_sw = Math.round( sw/total_entries*100 );
+
+        prop_gh = Math.round( ghost/total_entries*100 );
+        prop_sh = Math.round( shadow/total_entries*100 );
+        prop_st = Math.round( storm/total_entries*100 );
+        prop_mt = Math.round( mountain/total_entries*100 );
+        prop_mo = Math.round( moon/total_entries*100 );
 
         pc = MakeString(pc);
         ps = MakeString(ps);
@@ -359,13 +388,24 @@
         sw_mt = MakeString(sw_mt);
         sw_mo = MakeString(sw_mo);
 
+        prop_pc = MakeStringProportion(prop_pc);
+        prop_ps = MakeStringProportion(prop_ps);
+        prop_xb = MakeStringProportion(prop_xb);
+        prop_sw = MakeStringProportion(prop_sw);
+
+        prop_gh = MakeStringProportion(prop_gh);
+        prop_sh = MakeStringProportion(prop_sh);
+        prop_st = MakeStringProportion(prop_st);
+        prop_mt = MakeStringProportion(prop_mt);
+        prop_mo = MakeStringProportion(prop_mo);
+
         if(unclear != 0)
         {
             unclear_txt = "<br><span class=\"shade\">Unclear:&nbsp;&nbsp;<b>"+unclear+"</b></span>";
         }
 
 
-        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"</span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"</span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"</span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"</span><br><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
+        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
     }
 
     var entries = [];
