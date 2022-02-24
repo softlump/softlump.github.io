@@ -223,6 +223,17 @@
         return txt;
     }
 
+    function RenderContestInfo( contest, days, size )
+    {
+        sum = 0;
+        var txt = "";
+
+        txt = PrintHeader( contest, size );
+        for( x=0;x<days.length;x++){ txt += PrintDayBreakdown( contest, days[x], x+1, size, entries, sum ); }
+        document.getElementById(contest).innerHTML = txt;
+        document.getElementById(contest+"_DATA").innerHTML = PrintContestData(contest,entries);
+    }
+
     function PrintHeader( title, size )
     {
         var txt = "";
@@ -1581,7 +1592,7 @@
     entries.push( new Entry("AUTUMN_2021", "15", "pc", "sh") );//Demmodor
     entries.push( new Entry("AUTUMN_2021", "15", "pc", "mo") );//Jackal30
 
-// ############################################################################## AUTUMN 2021 ########
+// ############################################################################## WINTER 2022 ########
     entries.push( new Entry("WINTER_2022", "1", "pc", "mo") );//Vash
     entries.push( new Entry("WINTER_2022", "1", "pc", "sh") );//Waynee23
     entries.push( new Entry("WINTER_2022", "1", "pc", "gh") );//Dietchoke
@@ -1680,102 +1691,28 @@
 
     //entries.push( new Entry("WINTER_2022", "15", "pc", "gh") );//
     //entries.push( new Entry("", "", "", "") );//
-    //var days = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+    //days = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""];
 
-    var text = "";
-    var size = 30; 
-    var sum = 0;
-    var thisContest = "";
-/*
+    var size = 30; // Chart Length, can be set individually for a given contest as well.
+    var sum = 0; // global sum tracking used by daily breakdown function.
 
-*/
-
-    thisContest = "WINTER_2022";
-    var days = ["Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18", "Feb 19", "Feb 20", "Feb 21", "Feb 22", "Feb 23", "Feb 24"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "AUTUMN_2021";
-    var days = ["Nov 04", "Nov 05", "Nov 06", "Nov 07", "Nov 08", "Nov 09", "Nov 10", "Nov 11", "Nov 12", "Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "SUMMER_2021";
-    var days = ["Aug 13", "Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24", "Aug 25", "Aug 26"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "SPRING_2021";
-    var days = ["May 07", "May 08", "May 09", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17", "May 18", "May 19", "May 20"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-    thisContest = "WINTER_2021";
-    var days = ["Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "AUTUMN_2020";
-    var days = ["Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21", "Nov 22", "Nov 23", "Nov 24", "Nov 25", "Nov 26"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "SUMMER_2020";
-    var days = ["Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24", "Aug 25", "Aug 26", "Aug 27"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "SPRING_2020";
-    var days = ["Apr 09", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-
-    thisContest = "WINTER_2020";
-    var days = ["Jan 31", "Feb 01", "Feb 02", "Feb 03", "Feb 04", "Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
-
-    thisContest = "AUTUMN_2019";
-    var days = ["Nov 08", "Nov 09", "Nov 10", "Nov 11", "Nov 12", "Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21"];
-    sum = 0;
-    text = PrintHeader( thisContest, size );
-    for( x=0;x<days.length;x++){ text += PrintDayBreakdown( thisContest, days[x], x+1, size, entries ); }
-    document.getElementById(thisContest).innerHTML = text;
-    document.getElementById(thisContest+"_DATA").innerHTML = PrintContestData(thisContest,entries);
+    /*
+        ADDING A NEW CONTEST
+        Match the name in RenderContestInfo() and all related entries in the entries array.
+        Add a new copy of the <div class="container"> for the new contest following the previous naming convention.
+        The array in RenderContestInfo is a simple manual list of the dates, is used to determine the row count, manual because its simpler than messing with some calendar class especailly if dates ever cross months.
+    */
+   
+    RenderContestInfo("WINTER_2022", ["Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18", "Feb 19", "Feb 20", "Feb 21", "Feb 22", "Feb 23", "Feb 24"], size);
+    RenderContestInfo("AUTUMN_2021", ["Nov 04", "Nov 05", "Nov 06", "Nov 07", "Nov 08", "Nov 09", "Nov 10", "Nov 11", "Nov 12", "Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18"], size);
+    RenderContestInfo("SUMMER_2021", ["Aug 13", "Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24", "Aug 25", "Aug 26"], size);
+    RenderContestInfo("SPRING_2021", ["May 07", "May 08", "May 09", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17", "May 18", "May 19", "May 20"], size);
+    RenderContestInfo("WINTER_2021", ["Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18"], size);
+    RenderContestInfo("AUTUMN_2020", ["Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21", "Nov 22", "Nov 23", "Nov 24", "Nov 25", "Nov 26"], size);
+    RenderContestInfo("SUMMER_2020", ["Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24", "Aug 25", "Aug 26", "Aug 27"], size);
+    RenderContestInfo("SPRING_2020", ["Apr 09", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"], size);
+    RenderContestInfo("WINTER_2020", ["Jan 31", "Feb 01", "Feb 02", "Feb 03", "Feb 04", "Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13"], size);
+    RenderContestInfo("AUTUMN_2019", ["Nov 08", "Nov 09", "Nov 10", "Nov 11", "Nov 12", "Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21"], size);
 </script>
 
 </body>
