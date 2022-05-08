@@ -1723,13 +1723,13 @@
     entries.push( new Entry("SPRING_2022", 3, "pc", "gh") );//FeatheredFellow
     entries.push( new Entry("SPRING_2022", 3, "ps", "mt") );//(PSN)Sneakshow
     entries.push( new Entry("SPRING_2022", 3, "sw", "gh") );//(NSW)EpicDominationz
-    
+    entries.push( new Entry("SPRING_2022", 3, "pc", "gh") );//Oorel
+
     //entries.push( new Entry("SPRING_2022", 3, "pc", "gh") );//
     //entries.push( new Entry("", 1, "", "") );//
-    //days = ["", "", "", "", "", "", "", "", "", "", "", "", "", ""];
 
     var size = 30; // Chart Length/Column count, can be set individually for a given contest as well.
-    var sum = 0; // Tracking SUM of entires for a given contest, used by PrintDayBreakdown().
+    var sum = 0; // global gets reset at times; Tracking SUM of entires for a given contest, used by PrintDayBreakdown().
 
     /*
         ADDING A NEW CONTEST
