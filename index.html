@@ -235,6 +235,7 @@
     function RenderContestInfo( contest, days, size )
     {
         sum = 0;
+        maxdays = days.length;
         var txt = "";
 
         txt = PrintHeader( contest, size );
@@ -374,8 +375,6 @@
         var week2 = 0;
         var week3 = 0;
 
-        var daytotal = 1; // for spacing purposes we assume this is a duble-digit number currently.
-
         for( i=0;i<allEntries.length;i++)
         {
             if( allEntries[i].contest == contest )
@@ -393,10 +392,9 @@
                 if( allEntries[i].day <= 7  ){ week1++;}
                 if( allEntries[i].day >= 5 && allEntries[i].day <= 11 ){ week2++;}
                 if( allEntries[i].day >= 8 ){ week3++;}
-
-                if( allEntries[i].day > daytotal ){ daytotal = allEntries[i].day;} //roundabout way to get day total
             }
         }
+
         // Calculate Proportions
         total_entries = ghost + shadow + storm + mountain + moon;
         prop_pc = Math.round( pc/total_entries*100 );
@@ -452,7 +450,7 @@
         }
 
 
-        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week (8-"+daytotal+"):&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
+        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week (8-"+maxdays+"):&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
     }
 
     var entries = [];
@@ -1751,6 +1749,7 @@
 
     var size = 30; // Chart Length/Column count, can be set individually for a given contest as well.
     var sum = 0; // global gets reset at times; Tracking SUM of entires for a given contest, used by PrintDayBreakdown().
+    var maxdays = 0; // global set array length of days, assumed to be at least 2 digits for spacing purposes, set initiallt in RenderContestInfo() and used in the end of PrintContestData()
 
     /*
         ADDING A NEW CONTEST
