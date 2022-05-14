@@ -75,20 +75,14 @@
             padding:0 10px;
             color:#ccc;
         }
-        .contest_link a{
+        a{
             color:#ccc;
         }
-        .contest_link a:hover{
+        a:hover{
             background-color: #ccc;
             color:#444;
         }
-        .bottomtext a{
-            color:#ccc;
-        }
-        .bottomtext a:hover{
-            background-color: #ccc;
-            color:#444;
-        }
+
         .bottomtext span{
             opacity:0.4;
         }
@@ -108,7 +102,8 @@
         <!-- Collected this to see trends over time, do an educated guess on total submissions on a given active contest.<br> -->
         GMT +1, meaning that day 1 only covers about 5h, from 19:00 until 00:00. The last day represents 19h, as the threads close at 19:00 GMT+1.<br>
         <br>
-        This page is completely self-contained; styling, scripting and the data-set is all in this *.html file, so it can easily be saved for archival purposes. <br>
+        This page is completely self-contained; styling, scripting and the data-set is all in this *.html file, so it can easily be saved for archival purposes.<br><br>
+        More detailed info and data compiled by Vash and Sleepy_Time: <a href="https://docs.google.com/spreadsheets/d/12q_qFT9U6yA0Ih_9n0uAIFvB60BZs0H0NTgxNyMlANU" target="_blank">Dojo Contest Data Spreadsheet</a>.<br>
         <br>
         PC:<span class="pc">&nbsp;</span> PlayStation:<span class="ps">&nbsp;</span> Xbox:<span class="xb">&nbsp;</span> Nintendo Switch:<span class="sw">&nbsp;</span><br><br>
     </div>
@@ -1749,7 +1744,7 @@
 
     var size = 30; // Chart Length/Column count, can be set individually for a given contest as well.
     var sum = 0; // global gets reset at times; Tracking SUM of entires for a given contest, used by PrintDayBreakdown().
-    var maxdays = 0; // global set array length of days, assumed to be at least 2 digits for spacing purposes, set initiallt in RenderContestInfo() and used in the end of PrintContestData()
+    var maxdays = 0; // global set array length of days, assumed to be at least 2 digits for spacing purposes, set initially in RenderContestInfo() and used in the end of PrintContestData()
 
     /*
         ADDING A NEW CONTEST
