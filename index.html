@@ -8,7 +8,7 @@
     <title>Dojo Contest Submissions Per Day</title>
     <!-- https://ogp.me -->
     <meta property="og:title" content="Dojo Contest Submissions Per Day" />
-    <meta property="og:description " content="Information on dojo contest submissions by day/platform/tier" />
+    <meta property="og:description " content="Information on dojo contest submissions in Warframe by day/platform/tier" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="" />
     <meta property="og:url" content="https://softlump.github.io" />
@@ -293,11 +293,19 @@
         else if( temp.length == 3 ){ temp = "&nbsp;"+temp; }
         return temp;
     }
+    function MakeStringShort( value )
+    {
+        var temp = value.toString();
+        if( temp.length == 1 ){ temp = "&nbsp;&nbsp;"+temp; }
+        else if( temp.length == 2 ){ temp = "&nbsp;"+temp; }
+        return temp;
+    }
     function MakeStringProportion( value )
     {
         var temp = value.toString();
         if( temp.length == 1 ){ temp = "&nbsp;&nbsp;"+temp+"%"; }
         else if( temp.length == 2 ){ temp = "&nbsp;"+temp+"%"; }
+        else if( temp.length == 3 ){ temp = temp+"%"; }
         return temp;
     }
     function PrintDayBreakdown( contest, date, day, size, allEntries )
@@ -366,6 +374,9 @@
         var prop_st = 0;
         var prop_mt = 0;
         var prop_mo = 0;
+        var prop_w1 = 0;
+        var prop_w2 = 0;
+        var prop_w3 = 0;
         var total_entries = 0;
 
         var unclear = 0;
@@ -402,6 +413,10 @@
         prop_xb = Math.round( xb/total_entries*100 );
         prop_sw = Math.round( sw/total_entries*100 );
 
+        prop_w1 = Math.round( week1/total_entries*100 );
+        prop_w2 = Math.round( week2/total_entries*100 );
+        prop_w3 = Math.round( week3/total_entries*100 );
+
         prop_gh = Math.round( ghost/total_entries*100 );
         prop_sh = Math.round( shadow/total_entries*100 );
         prop_st = Math.round( storm/total_entries*100 );
@@ -433,10 +448,18 @@
         sw_mt = MakeString(sw_mt);
         sw_mo = MakeString(sw_mo);
 
+        week1 = MakeStringShort(week1);
+        week2 = MakeStringShort(week2);
+        week3 = MakeStringShort(week3);
+
         prop_pc = MakeStringProportion(prop_pc);
         prop_ps = MakeStringProportion(prop_ps);
         prop_xb = MakeStringProportion(prop_xb);
         prop_sw = MakeStringProportion(prop_sw);
+
+        prop_w1 = MakeStringProportion(prop_w1);
+        prop_w2 = MakeStringProportion(prop_w2);
+        prop_w3 = MakeStringProportion(prop_w3);
 
         prop_gh = MakeStringProportion(prop_gh);
         prop_sh = MakeStringProportion(prop_sh);
@@ -450,7 +473,7 @@
         }
 
 
-        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"</b><br>Middle-week (5-11):&nbsp;<b>"+week2+"</b><br>Last Week (8-"+maxdays+"):&nbsp;&nbsp;&nbsp;<b>"+week3+"</b>";
+        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;&nbsp;<b>"+week1+"&nbsp;<span class=\"shade2\">"+prop_w1+"</span></b><br>Middle-week (5-11):&nbsp;<b>"+week2+"&nbsp;<span class=\"shade2\">"+prop_w2+"</span></b><br>Last Week (8-"+maxdays+"):&nbsp;&nbsp;&nbsp;<b>"+week3+"&nbsp;<span class=\"shade2\">"+prop_w3+"</span></b>";
     }
 
     var entries = [];
