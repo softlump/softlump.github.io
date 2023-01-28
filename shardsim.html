@@ -32,6 +32,7 @@
             text-shadow: 1px 1px 1px #222;
         }
         .s{opacity:0.9;}
+        .s2{opacity:0.5;}
         .u{text-decoration: underline;}
         .r{color:#e60000;}
         .y{color:#ffcc00;}
@@ -69,7 +70,7 @@
             <input id="ignore_yellow" type="checkbox" style="margin:0;">
             <b>&nbsp;Attempt to boost pity on 20% odds, despite Ignored Archon</b>
             <input id="boost_attempt" type="checkbox" style="margin:0;">
-            <b>&nbsp;Weeks/Runs to test</b>
+            <b>&nbsp;Weeks to test</b>
             <input type="text" 
                         name="numWeeks"
                         onkeypress="return onlyNumberKey(event)" 
@@ -120,6 +121,7 @@
                 ignoreYellow=true;
 
             var boost = false;
+            var skipWeek = false;
             var skipIgnore = false;
             if( document.getElementById("boost_attempt").checked )
                 boost=true;
@@ -156,9 +158,13 @@
                 if( boost && ignoreYellow && archon == 2 && chance == 1 ){ skipIgnore = true;}
                 if( boost && ignoreRed && archon == 1 && chance == 1 ){ skipIgnore = true;}
 
-                if( ignoreBlue && archon == 0 && !skipIgnore ){ archon=1;i--;skippedWeeks++;continue; }
-                if( ignoreYellow && archon == 2 && !skipIgnore ){ archon=0;i--;skippedWeeks++;continue; }
-                if( ignoreRed && archon == 1 && !skipIgnore ){ archon=2;i--;skippedWeeks++;continue; }
+                if( ignoreBlue && archon == 0 && !skipIgnore ){ skipWeek=true; }
+                if( ignoreRed && archon == 1 && !skipIgnore ){ skipWeek=true;; }
+                if( ignoreYellow && archon == 2 && !skipIgnore ){ skipWeek=true; }
+
+                // if( ignoreBlue && archon == 0 && !skipIgnore ){ archon=1;i--;skippedWeeks++;continue; }
+                // if( ignoreYellow && archon == 2 && !skipIgnore ){ archon=0;i--;skippedWeeks++;continue; }
+                // if( ignoreRed && archon == 1 && !skipIgnore ){ archon=2;i--;skippedWeeks++;continue; }
 
                 skipIgnore = false;
 
@@ -167,37 +173,50 @@
                 txt +="<span class=\"line\">WEEK&nbsp;"+(i+1)+spacer;
 
                 if( archon == 0 ) txt+="&nbsp;-&nbsp;<span class=\"b\">Boreal</span>&nbsp;-&nbsp;";
-                if( archon == 2 ) txt+="&nbsp;-&nbsp;<span class=\"y\">Nira</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
                 if( archon == 1 ) txt+="&nbsp;-&nbsp;<span class=\"r\">Amar</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
+                if( archon == 2 ) txt+="&nbsp;-&nbsp;<span class=\"y\">Nira</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
 
                 chanceTxt = (chance*20).toString();
-                if(chance != 5)
-                    txt+= "TauChance(&nbsp;<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
-                else
-                    txt+= "TauChance(<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+                
 
-                var tmpRand = getRandomInt(6);
-                (tmpRand < chance ) ? tau=true : tau=false;
-                if(chance == 5)tau=true;
-
-                if(tau){
-                    chance=1;
-                    if( archon == 0 ){ blueTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"b\">&#9672;</span>&nbsp;-&nbsp;"; }
-                    if( archon == 2 ){ yellowTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"y\">&#9672;</span>&nbsp;-&nbsp;"; }
-                    if( archon == 1 ){ redTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"r\">&#9672;</span>&nbsp;-&nbsp;"; }
-                    // txt+="Outcome(<b>TAU</b>)&nbsp;&#9672;&nbsp;-&nbsp;";
+                if(skipWeek)
+                {   
+                    if(chance != 5)
+                        txt+= "<span class=\"s2\">TauChance(&nbsp;<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+                    else
+                        txt+= "<span class=\"s2\">TauChance(<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+                    txt+="Ignored Fight&#9671;</span>&nbsp;&nbsp;&nbsp;";
+                    skipWeek = false;
                 }
+
                 else{
-                    chance++;
-                    if(ignorePity) chance = 1;
-                    if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
-                    if( archon == 2 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
-                    if( archon == 1 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
-                    // txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;&#9671;&nbsp;-&nbsp;";
-                }
-                if(chance == 6)
-                    chance = 1;
+                    // THIS IS A DUPLIOCATE LINE FOR LAZY SIMPLICITY
+                    if(chance != 5)
+                        txt+= "TauChance(&nbsp;<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+                    else
+                        txt+= "TauChance(<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+                    var tmpRand = getRandomInt(6);
+                    (tmpRand < chance ) ? tau=true : tau=false;
+                    if(chance == 5)tau=true;
 
+                    if(tau){
+                        chance=1;
+                        if( archon == 0 ){ blueTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"b\">&#9672;</span>&nbsp;-&nbsp;"; }
+                        if( archon == 1 ){ redTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"r\">&#9672;</span>&nbsp;-&nbsp;"; }
+                        if( archon == 2 ){ yellowTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"y\">&#9672;</span>&nbsp;-&nbsp;"; }
+                        // txt+="Outcome(<b>TAU</b>)&nbsp;&#9672;&nbsp;-&nbsp;";
+                    }
+                    else{
+                        chance++;
+                        if(ignorePity) chance = 1;
+                        if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
+                        if( archon == 1 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
+                        if( archon == 2 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
+                        // txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;&#9671;&nbsp;-&nbsp;";
+                    }
+                    if(chance == 6)
+                        chance = 1;
+                }
 
                 txt+="drop totals;&nbsp;Regular&nbsp;<b><span class=\"r s\">"+red+"</span>&nbsp;<span class=\"y s\">"+yellow+"</span>&nbsp;<span class=\"b s\">"+blue+"</span></b>&nbsp;-&nbsp;";
                 txt+="TAU&nbsp;<b><span class=\"r\">"+redTau+"</span>&nbsp;<span class=\"y\">"+yellowTau+"</span>&nbsp;<span class=\"b\">"+blueTau+"</span></b>&nbsp;";
