@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>shard drop sim</title>
+
+    <link rel="icon" type="image/png" href="fav.png" sizes="16x16" />
+
+    <style>
+        html {
+            background:rgb(100,100,100);
+        }
+        body {           
+            color:rgb(0,0,0);
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            padding:0;
+            margin:0;
+            top:0;
+            left:0;
+            width: 100%;
+            height: auto;
+            background:rgb(100,100,100);
+            color:rgb(200,200,200);
+            /*overflow:visible;*/
+        }
+        div{
+            margin:5px;
+        }
+        .r{color:#cc3300;}
+        .y{color:#ffcc00;}
+        .b{color:#3399ff;}
+        .c1{color:#cc0000;}
+        .c2{color:#ff3300;}
+        .c3{color:#ffcc00;}
+        .c4{color:#99cc00;}
+        .c5{color:#00cc00;}
+        .line{
+            background: linear-gradient(0deg, rgba(90,90,90,1) 0%, rgba(78,78,78,1) 100%);
+            padding:4px 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- some input thing; weeks, starting shard, starting chance -->
+    <div>
+        <form action="">
+            <b>Starting Point</b>
+            <select name="startPoint">
+                <option value="b">Blue</option>
+                <option value="r">Red</option>
+                <option value="y">Yellow</option>
+            </select>
+            <b>weeks to test</b>
+            <input type="text" 
+                        name="numWeeks"
+                        onkeypress="return onlyNumberKey(event)" 
+                        maxlength="3"
+                        value="10"
+                        style="width:25px;" />
+            <input type="button" onclick="runSim(this.form)" value="Test">
+        </form>
+    </div>
+    <div id="output">
+        <!-- 
+        WEEK 1  - Amar   - TauChance( 20% ) - Outcome( - ) - Dropped; Regular 1 0 0 - TAU 0 0 0 
+        WEEK 2  - Nira   - TauChance( 40% ) - Outcome( - ) - Dropped; Regular 1 1 0 - TAU 0 0 0 
+        WEEK 3  - Boreal - TauChance( 60% ) - Outcome(TAU) - Dropped; Regular 1 1 0 - TAU 1 0 0 
+        WEEK 4  - Amar   - TauChance( 20% ) - Outcome(TAU) - Dropped; Regular 1 1 0 - TAU 2 0 0 
+         -->
+        <span class="line">WEEK 1  | Amar | Chance(20%) | Outcome(TAU) | Shards Dropped <span class="r">1</span> <span class="y">1</span> <span class="b">1</span> | Tau <b><span class="r">1</span> <span class="y">1</span> <span class="b">1</span></b> </span>
+    </div>
+    <script>
+        function onlyNumberKey(evt) {
+              
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+    <script>
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+        function runSim(form){
+            //txt = form.numWeeks.value+""+form.startPoint.value;
+            //document.getElementById("output").innerHTML = txt;
+            var archon = 0;
+
+            var txt = "";
+            var spacer = "";
+            var weeks = 0;
+            weeks = parseInt(form.numWeeks.value);
+
+            var chance = 1;
+            var chanceTxt = "";
+            var tau = false;
+
+            if(form.startPoint.value == "b"){ archon = 0; }
+            if(form.startPoint.value == "y"){ archon = 1; }
+            if(form.startPoint.value == "r"){ archon = 2; }
+
+            var red = 0;
+            var redTau = 0;
+            var yellow = 0;
+            var yellowTau = 0;
+            var blue = 0;
+            var blueTau = 0;
+
+            for( i=0;i<weeks;i++){
+                //txt += "<span class=\"line\">Archon"+archon+"</span><br>";
+
+                ( i+1 < 10 )  ? spacer = "&nbsp;" : spacer = ""; 
+
+                txt +="<span class=\"line\">WEEK&nbsp;"+(i+1)+spacer;
+
+                if( archon == 0 ) txt+="&nbsp;-&nbsp;<span class=\"b\">Boreal</span>&nbsp;-&nbsp;";
+                if( archon == 1 ) txt+="&nbsp;-&nbsp;<span class=\"y\">Nira</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
+                if( archon == 2 ) txt+="&nbsp;-&nbsp;<span class=\"r\">Amar</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
+
+                chanceTxt = (chance*20).toString();
+                if(chance != 5)
+                    txt+= "TauChance(&nbsp;<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+                else
+                    txt+= "TauChance(<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
+
+                var tmpRand = getRandomInt(6);
+                (tmpRand <= chance ) ? tau=true : tau=false;
+                if(tau){
+                    chance=1;
+                    if( archon == 0 ) blueTau++;
+                    if( archon == 1 ) yellowTau++;
+                    if( archon == 2 ) redTau++;
+                    txt+="Outcome(TAU)&nbsp;-&nbsp;";
+                }
+                else{
+                    chance++;
+                    if( archon == 0 ) blue++;
+                    if( archon == 1 ) yellow++;
+                    if( archon == 2 ) red++;
+                    txt+="Outcome(&nbsp;-&nbsp;)&nbsp;-&nbsp;"
+                }
+                if(chance == 6)
+                    chance = 1;
+
+
+                txt+="Dropped;&nbsp;Regular&nbsp;<span class=\"r\">"+red+"</span>&nbsp;<span class=\"y\">"+yellow+"</span>&nbsp;<span class=\"b\">"+blue+"</span>&nbsp;-&nbsp;";
+                txt+="TAU&nbsp;<span class=\"r\">"+redTau+"</span>&nbsp;<span class=\"y\">"+yellowTau+"</span>&nbsp;<span class=\"b\">"+blueTau+"</span>&nbsp;";
+
+                txt+="</span><br>";
+
+                archon++;
+                if(archon == 3)
+                    archon = 0;
+            }
+
+            document.getElementById("output").innerHTML = txt;
+        }
+    </script>
+</body>
+</html>
