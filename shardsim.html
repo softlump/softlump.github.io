@@ -29,10 +29,11 @@
         }
         div{
             margin:5px;
-            text-shadow: 1px 1px 2px #222;
+            text-shadow: 1px 1px 1px #222;
         }
         .s{opacity:0.9;}
-        .r{color:#e60000;}/*d42c58 e60000*/
+        .u{text-decoration: underline;}
+        .r{color:#e60000;}
         .y{color:#ffcc00;}
         .b{color:#3399ff;}
         .c1{color:rgb(140,140,140);}
@@ -181,24 +182,24 @@
 
                 if(tau){
                     chance=1;
-                    if( archon == 0 ) blueTau++;
-                    if( archon == 1 ) yellowTau++;
-                    if( archon == 2 ) redTau++;
-                    txt+="Outcome(<b>TAU</b>)&nbsp;-&nbsp;";
+                    if( archon == 0 ){ blueTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"b\">&#9672;</span>&nbsp;-&nbsp;"; }
+                    if( archon == 1 ){ yellowTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"y\">&#9672;</span>&nbsp;-&nbsp;"; }
+                    if( archon == 2 ){ redTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"r\">&#9672;</span>&nbsp;-&nbsp;"; }
+                    // txt+="Outcome(<b>TAU</b>)&nbsp;&#9672;&nbsp;-&nbsp;";
                 }
                 else{
                     chance++;
                     if(ignorePity) chance = 1;
-                    if( archon == 0 ) blue++;
-                    if( archon == 1 ) yellow++;
-                    if( archon == 2 ) red++;
-                    txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;-&nbsp;"
+                    if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
+                    if( archon == 1 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
+                    if( archon == 2 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
+                    // txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;&#9671;&nbsp;-&nbsp;";
                 }
                 if(chance == 6)
                     chance = 1;
 
 
-                txt+="drop totals;&nbsp;Regular&nbsp;<span class=\"r s\">"+red+"</span>&nbsp;<span class=\"y s\">"+yellow+"</span>&nbsp;<span class=\"b s\">"+blue+"</span>&nbsp;-&nbsp;";
+                txt+="drop totals;&nbsp;Regular&nbsp;<b><span class=\"r s\">"+red+"</span>&nbsp;<span class=\"y s\">"+yellow+"</span>&nbsp;<span class=\"b s\">"+blue+"</span></b>&nbsp;-&nbsp;";
                 txt+="TAU&nbsp;<b><span class=\"r\">"+redTau+"</span>&nbsp;<span class=\"y\">"+yellowTau+"</span>&nbsp;<span class=\"b\">"+blueTau+"</span></b>&nbsp;";
 
                 txt+="</span><br>";
@@ -208,7 +209,7 @@
                     archon = 0;
             }
             if(skippedWeeks != 0)
-                txt+="<span class=\"line\">"+skippedWeeks+" Weeks were skipped.</span>";
+                txt+="<span class=\"line\">"+skippedWeeks+" Weeks (and Shards) were skipped.</span>";
 
             document.getElementById("output").innerHTML = txt;
         }
