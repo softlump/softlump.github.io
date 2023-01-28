@@ -66,7 +66,7 @@
             <input id="ignore_yellow" type="checkbox" style="margin:0;">
             <b>&nbsp;Attempt to boost pity on 20% odds, despite Ignored Archon</b>
             <input id="boost_attempt" type="checkbox" style="margin:0;">
-            <b>&nbsp;weeks to test</b>
+            <b>&nbsp;Weeks/Runs to test</b>
             <input type="text" 
                         name="numWeeks"
                         onkeypress="return onlyNumberKey(event)" 
@@ -85,34 +85,13 @@
          -->
     </div>
     <script>
-        function onlyNumberKey(evt) {
-              
+        function onlyNumberKey(evt) {   
             // Only ASCII character in that range allowed
             var ASCIICode = (evt.which) ? evt.which : evt.keyCode
             if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
                 return false;
             return true;
         }
-    </script>
-    <script>
-        function validate(){
-            // get the checkbox element from the DOM using the getElementId function
-            let checkbox=document.getElementById("agree_document");
-            // get the text element to display the status of the checkbox
-            let text=document.getElementById("confirm");
-            // use the checked property to check if the checkbox is checked
-            if (checkbox.checked){
-                // display result by assigning to innerHTML of the text element.
-                text.innerHTML="Thank you for accepting the agreement";
-            }
-            else{
-                text.innerHTML = "Please accept the agreement to proceed";
-            }
-                
-
-        }
-            
-
     </script>
     <script>
         function getRandomInt(max) {
@@ -126,6 +105,7 @@
             var ignoreBlue = false;
             var ignoreRed = false;
             var ignoreYellow = false;
+            var skippedWeeks = 0;
             
             if( document.getElementById("pity").checked )
                 ignorePity=true;
@@ -173,9 +153,9 @@
                 if( boost && ignoreYellow && archon == 1 && chance == 1 ){ skipIgnore = true;}
                 if( boost && ignoreRed && archon == 2 && chance == 1 ){ skipIgnore = true;}
 
-                if( ignoreBlue && archon == 0 && !skipIgnore ){ archon++;i--;continue; }
-                if( ignoreYellow && archon == 1 && !skipIgnore ){ archon++;i--;continue; }
-                if( ignoreRed && archon == 2 && !skipIgnore ){ archon=0;i--;continue; }
+                if( ignoreBlue && archon == 0 && !skipIgnore ){ archon++;i--;skippedWeeks++;continue; }
+                if( ignoreYellow && archon == 1 && !skipIgnore ){ archon++;i--;skippedWeeks++;continue; }
+                if( ignoreRed && archon == 2 && !skipIgnore ){ archon=0;i--;skippedWeeks++;continue; }
 
                 skipIgnore = false;
 
@@ -225,6 +205,8 @@
                 if(archon == 3)
                     archon = 0;
             }
+            if(skippedWeeks != 0)
+                txt+="<span class=\"line\">"+skippedWeeks+" Weeks were skipped.</span>";
 
             document.getElementById("output").innerHTML = txt;
         }
