@@ -136,8 +136,8 @@
             var tau = false;
 
             if(form.startPoint.value == "b"){ archon = 0; }
-            if(form.startPoint.value == "y"){ archon = 1; }
-            if(form.startPoint.value == "r"){ archon = 2; }
+            if(form.startPoint.value == "r"){ archon = 1; }
+            if(form.startPoint.value == "y"){ archon = 2; }
 
             var red = 0;
             var redTau = 0;
@@ -153,12 +153,12 @@
                 if( ignoreBlue && ignoreYellow && ignoreRed ) continue;
 
                 if( boost && ignoreBlue && archon == 0 && chance == 1 ) { skipIgnore = true;}
-                if( boost && ignoreYellow && archon == 1 && chance == 1 ){ skipIgnore = true;}
-                if( boost && ignoreRed && archon == 2 && chance == 1 ){ skipIgnore = true;}
+                if( boost && ignoreYellow && archon == 2 && chance == 1 ){ skipIgnore = true;}
+                if( boost && ignoreRed && archon == 1 && chance == 1 ){ skipIgnore = true;}
 
-                if( ignoreBlue && archon == 0 && !skipIgnore ){ archon++;i--;skippedWeeks++;continue; }
-                if( ignoreYellow && archon == 1 && !skipIgnore ){ archon++;i--;skippedWeeks++;continue; }
-                if( ignoreRed && archon == 2 && !skipIgnore ){ archon=0;i--;skippedWeeks++;continue; }
+                if( ignoreBlue && archon == 0 && !skipIgnore ){ archon=1;i--;skippedWeeks++;continue; }
+                if( ignoreYellow && archon == 2 && !skipIgnore ){ archon=0;i--;skippedWeeks++;continue; }
+                if( ignoreRed && archon == 1 && !skipIgnore ){ archon=2;i--;skippedWeeks++;continue; }
 
                 skipIgnore = false;
 
@@ -167,8 +167,8 @@
                 txt +="<span class=\"line\">WEEK&nbsp;"+(i+1)+spacer;
 
                 if( archon == 0 ) txt+="&nbsp;-&nbsp;<span class=\"b\">Boreal</span>&nbsp;-&nbsp;";
-                if( archon == 1 ) txt+="&nbsp;-&nbsp;<span class=\"y\">Nira</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
-                if( archon == 2 ) txt+="&nbsp;-&nbsp;<span class=\"r\">Amar</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
+                if( archon == 2 ) txt+="&nbsp;-&nbsp;<span class=\"y\">Nira</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
+                if( archon == 1 ) txt+="&nbsp;-&nbsp;<span class=\"r\">Amar</span>&nbsp;&nbsp;&nbsp;-&nbsp;";
 
                 chanceTxt = (chance*20).toString();
                 if(chance != 5)
@@ -183,16 +183,16 @@
                 if(tau){
                     chance=1;
                     if( archon == 0 ){ blueTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"b\">&#9672;</span>&nbsp;-&nbsp;"; }
-                    if( archon == 1 ){ yellowTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"y\">&#9672;</span>&nbsp;-&nbsp;"; }
-                    if( archon == 2 ){ redTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"r\">&#9672;</span>&nbsp;-&nbsp;"; }
+                    if( archon == 2 ){ yellowTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"y\">&#9672;</span>&nbsp;-&nbsp;"; }
+                    if( archon == 1 ){ redTau++; txt+="Outcome(<b>TAU</b>)&nbsp;<span class=\"r\">&#9672;</span>&nbsp;-&nbsp;"; }
                     // txt+="Outcome(<b>TAU</b>)&nbsp;&#9672;&nbsp;-&nbsp;";
                 }
                 else{
                     chance++;
                     if(ignorePity) chance = 1;
                     if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
-                    if( archon == 1 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
-                    if( archon == 2 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
+                    if( archon == 2 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
+                    if( archon == 1 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
                     // txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;&#9671;&nbsp;-&nbsp;";
                 }
                 if(chance == 6)
