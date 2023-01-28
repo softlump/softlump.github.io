@@ -161,7 +161,9 @@
                     txt+= "TauChance(<span class=\"c"+chance+"\">"+chanceTxt+"\%&nbsp;</span>)&nbsp;-&nbsp;";
 
                 var tmpRand = getRandomInt(6);
-                (tmpRand <= chance ) ? tau=true : tau=false;
+                (tmpRand < chance ) ? tau=true : tau=false;
+                if(chance == 5)tau=true;
+
                 if(tau){
                     chance=1;
                     if( archon == 0 ) blueTau++;
