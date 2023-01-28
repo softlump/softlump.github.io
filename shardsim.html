@@ -50,15 +50,21 @@
 <!-- some input thing; weeks, starting shard, starting chance -->
     <div>
         <form action="">
-            <b>no pity</b>
-            <input id="pity" type="checkbox">
-            <b>Starting Point</b>
+            <b>No pity?</b>
+            <input id="pity" type="checkbox" style="margin:0;">
+            <b>&nbsp;Starting Point</b>
             <select name="startPoint">
                 <option value="b">Blue</option>
                 <option value="r">Red</option>
                 <option value="y">Yellow</option>
             </select>
-            <b>weeks to test</b>
+            <b>&nbsp;Ignore Blue</b>
+            <input id="ignore_blue" type="checkbox" style="margin:0;">
+            <b>&nbsp;Ignore Red</b>
+            <input id="ignore_red" type="checkbox" style="margin:0;">
+            <b>&nbsp;Ignore Yellow</b>
+            <input id="ignore_yellow" type="checkbox" style="margin:0;">
+            <b>&nbsp;weeks to test</b>
             <input type="text" 
                         name="numWeeks"
                         onkeypress="return onlyNumberKey(event)" 
@@ -115,9 +121,18 @@
             //document.getElementById("output").innerHTML = txt;
 
             var ignorePity = false;
+            var ignoreBlue = false;
+            var ignoreRed = false;
+            var ignoreYellow = false;
             
             if( document.getElementById("pity").checked )
                 ignorePity=true;
+            if( document.getElementById("ignore_blue").checked )
+                ignoreBlue=true;
+            if( document.getElementById("ignore_red").checked )
+                ignoreRed=true;
+            if( document.getElementById("ignore_yellow").checked )
+                ignoreYellow=true;
 
             var archon = 0;
 
@@ -144,6 +159,12 @@
 
             for( i=0;i<weeks;i++){
                 //txt += "<span class=\"line\">Archon"+archon+"</span><br>";
+
+                if( ignoreBlue && ignoreYellow && ignoreRed ) continue;
+
+                if( ignoreBlue && archon == 0 ){ archon++;i--;continue; }
+                if( ignoreYellow && archon == 1 ){ archon++;i--;continue; }
+                if( ignoreRed && archon == 2 ){ archon=0;i--;continue; }
 
                 ( i+1 < 10 )  ? spacer = "&nbsp;" : spacer = ""; 
 
