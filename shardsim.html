@@ -64,6 +64,8 @@
             <input id="ignore_red" type="checkbox" style="margin:0;">
             <b>&nbsp;Ignore Yellow</b>
             <input id="ignore_yellow" type="checkbox" style="margin:0;">
+            <b>&nbsp;Attempt to boost pity on 20% odds, despite Ignored Archon</b>
+            <input id="boost_attempt" type="checkbox" style="margin:0;">
             <b>&nbsp;weeks to test</b>
             <input type="text" 
                         name="numWeeks"
@@ -134,6 +136,11 @@
             if( document.getElementById("ignore_yellow").checked )
                 ignoreYellow=true;
 
+            var boost = false;
+            var skipIgnore = false;
+            if( document.getElementById("boost_attempt").checked )
+                boost=true;
+
             var archon = 0;
 
             var txt = "";
@@ -162,9 +169,15 @@
 
                 if( ignoreBlue && ignoreYellow && ignoreRed ) continue;
 
-                if( ignoreBlue && archon == 0 ){ archon++;i--;continue; }
-                if( ignoreYellow && archon == 1 ){ archon++;i--;continue; }
-                if( ignoreRed && archon == 2 ){ archon=0;i--;continue; }
+                if( boost && ignoreBlue && archon == 0 && chance == 1 ) { skipIgnore = true;}
+                if( boost && ignoreYellow && archon == 1 && chance == 1 ){ skipIgnore = true;}
+                if( boost && ignoreRed && archon == 2 && chance == 1 ){ skipIgnore = true;}
+
+                if( ignoreBlue && archon == 0 && !skipIgnore ){ archon++;i--;continue; }
+                if( ignoreYellow && archon == 1 && !skipIgnore ){ archon++;i--;continue; }
+                if( ignoreRed && archon == 2 && !skipIgnore ){ archon=0;i--;continue; }
+
+                skipIgnore = false;
 
                 ( i+1 < 10 )  ? spacer = "&nbsp;" : spacer = ""; 
 
