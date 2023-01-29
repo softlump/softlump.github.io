@@ -223,11 +223,19 @@
                     }
                     else{
                         chance++;
-                        if(ignorePity) chance = 1;
-                        if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
-                        if( archon == 1 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
-                        if( archon == 2 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
-                        // txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;&#9671;&nbsp;-&nbsp;";
+                        if(ignorePity){ 
+                            chance = 1;
+                            if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">&nbsp;-&nbsp;</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
+                            if( archon == 1 ){ red++; txt+="Outcome(<span class=\"c1\">&nbsp;-&nbsp;</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
+                            if( archon == 2 ){ yellow++; txt+="Outcome(<span class=\"c1\">&nbsp;-&nbsp;</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
+                        }
+                        else{
+
+                            if( archon == 0 ){ blue++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"b s\">&#9671;</span>&nbsp;-&nbsp;"; }
+                            if( archon == 1 ){ red++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"r s\">&#9671;</span>&nbsp;-&nbsp;";}
+                            if( archon == 2 ){ yellow++; txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;<span class=\"y s\">&#9671;</span>&nbsp;-&nbsp;";}
+                            // txt+="Outcome(<span class=\"c1\">+20</span>)&nbsp;&#9671;&nbsp;-&nbsp;";
+                            }
                     }
                     if(chance == 6)
                         chance = 1;
