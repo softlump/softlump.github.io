@@ -30,151 +30,140 @@
         div {
             text-shadow: 1px 1px 1px #222;
         }
+        select, input{
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+        }
         .weaponlist {
             color:orange;
         }
         .weaponlist a {
             float:left;
-            opacity:0.6;
-            color:#ccc;
+            opacity:0.8;
+            color:rgb(220,220,220);
             text-decoration: none;
             margin: 2px;
             padding:2px;
+        }
+        .weaponlist a.h{
+            opacity:0.7;
+            background:#ccc;
+            color:#444;
+            text-shadow:none;
+            border-radius:2px;
         }
         .weaponlist a:hover {
             opacity:1;
             background:#ccc;
             color:#444;
             text-shadow:none;
+            border-radius:2px;
         }
+
         #dispoForm select, input{
             font-family: 'Consolas', monospace;
             border:0;
             margin:0;
             padding:0px 3px;
         }
-        #display2{
-            margin:4px;
-        }
-        #display{
-            margin:4px;
-        }
-        #selection{
-            margin:4px;
-        }
-        #patch{
+        .m{
             margin:4px;
         }
         .s1{
             opacity:0.6;
+        }
+        span.min{
+            color:rgb(50,50,50);
+            background-color:rgb(170,170,170);
+            text-shadow: 1px 1px 1px rgb(150,150,150);
+            font-weight:bold;
+            border-left:1px solid black;
+            border-top:1px solid black;
+            border-bottom:1px solid black;
+        }
+        span.max{
+            color:rgb(50,50,50);
+            background-color:rgb(210,210,210);
+            text-shadow: 1px 1px 1px rgb(150,150,150);
+            font-weight:bold;
+            border:1px solid black;
+        }
+        span.avg{
+            color:rgb(200,200,200);
+            background-color:rgb(130,130,130);
+            text-shadow: 1px 1px 1px #222;
+            font-weight:bold;
+            border-right:1px solid black;
+            border-top:1px solid black;
+            border-bottom:1px solid black;
         }
 
         
     </style>
 </head>
 <body>
-<div id="patch">Last updated for: Lua’s Prey: Baruuk Prime: Hotfix 32.2.5 | December 14, 2022</div>
-<div id="selection"></div>
+<div id="patch" class="m">Last updated for: Lua’s Prey: Baruuk Prime: Hotfix 32.2.5 | December 14, 2022</div>
+<div id="selection" class="m"></div>
+<div id="formdiv" class="m">
+    <form action="" oninput="FormChange()" id="form">
+            <select name="type" id="form_type">
+                <option value="R">Rifle</option>
+                <option value="S">Shotgun</option>
+                <option value="P">Pistol</option>
+                <option value="A">Archgun</option>
+                <option value="M">Melee</option>
+            </select>
+            <b>Positive</b>
+            <select name="bonus" id="form_bonus">
+                <option value="3">3</option>
+                <option value="2">2</option>
+            </select>
+            <b>Negative</b>
+            <select name="malus" id="form_malus">
+                <option value="1">1</option>
+                <option value="0">0</option>
+            </select>
+            <b>Disposition</b>
+            <!-- <input type="text" name="dispo" id="form_dispo" oninput="return InputDispo(event)"  maxlength="5" value="0" style="width:34px;" /> -->
+            <input type="text" name="dispo" id="form_dispo" maxlength="5" value="0" style="width:34px;" />
+
+        </form>
+</div>
+<div id="stats" class="m"></div>
 <div id="list" class="weaponlist">list</div>
 
 <script type="text/javascript">
-window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);
+    window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);
 </script>
 <script>
     
     class Weapon {
-        constructor ( weaponName, dispo ) {
+        constructor ( weaponName, dispo, weaponType ) {
             this.weaponName = weaponName;
             this.dispo = dispo;
-
+            this.weaponType = weaponType;
         }
     }
 
-
-
-    function PrepBaseList ( ) {
-
-        var rawList = " Tenet Envoy (0.65) Xoris (0.65) Tatsu Prime (0.65) Phantasma Prime (0.65) Cedo (0.65) Guandao Prime (0.65) Nikana Prime (0.6) Pyrana Prime (0.6) Ignis (0.6) Acceltra (0.6) Dual Keres Prime (0.6) Aegrit (0.6) Innodem (0.6) Paracesis (0.6) Nataruk (0.6) Praedos (0.6) Phenmor (0.6) Kuva Bramma (0.6) Redeemer Prime (0.6) Rubico Prime (0.6) Plague Kripath (0.6) Kuva Zarr (0.6) Felarx (0.6) Kronen Prime (0.6) Catchmoon (Secondary) (0.55) Tenet Arca Plasmor (0.55) Sporelacer (Secondary) (0.55) Ignis Wraith (0.55) Epitaph (0.55) Steflos (0.5) Mausolon (0.5) Mausolon (Atmosphere) (0.5) Perigale (0.5) Tenet Ferrox (0.5) Stropha (0.5) Afuris Prime (0.5) Cobra & Crane Prime (0.5) Sarofang (0.5) Laetum (0.5) Corufell (0.5) Kuva Nukor (0.5) Tenet Plinx (0.5) Amprex (0.85) Tenet Grigori (0.85) Tenet Detron (0.85) Staticor (0.85) Hystrix Prime (0.85) Pennant (0.85) Kuva Twin Stubbas (0.85) Balla (0.85) Kuva Chakkhurr (0.85) Kuva Brakk (0.85) Vectis Prime (0.85) Trumna (0.85) Corvas Prime (0.8) Rattleguts (Secondary) (0.8) Venka Prime (0.8) Lesion (0.8) Afentis (0.8) Vericres (0.8) Tenet Agendus (0.8) Corvas Prime (Atmosphere) (0.8) Akstiletto Prime (0.8) Fulmin (0.8) Kuva Shildeg (0.75) Gram Prime (0.75) Hespar (0.75) Plague Keewar (0.75) Dokrahm (0.75) Tenet Exec (0.75) Knell Prime (0.75) Tenet Diplos (0.75) Shedu (0.75) Tenet Livia (0.75) Bubonico (0.75) Vastilok (0.75) Glaive Prime (0.7) Tombfinger (Secondary) (0.7) Sepfahn (0.7) Tenet Cycron (0.7) Kuva Ogris (0.7) Kuva Grattler (0.7) Proboscis Cernos (0.7) Slaytra (0.7) Reaper Prime (0.7) Orthos Prime (0.7) Ambassador (1.1) Arca Scisco (1.1) Sicarus (1.1) Dakra Prime (1.1) Telos Boltace (1.1) Catchmoon (Primary) (1.1) Prisma Dual Cleavers (1.1) Vaykor Marelok (1.1) Synoid Gammacor (1.1) Vectis (1.1) Kuva Kraken (1.1) Soma Prime (1.1) Akjagara (1.1) Pandero Prime (1.1) Opticor Vandal (1.1) Venka (1.1) Ninkondi Prime (1.1) Velocitus (Atmosphere) (1.1) Velocitus (1.1) Sporelacer (Primary) (1.1) Vermisplicer (Secondary) (1.1) Mewan (1.1) Karyst Prime (1.1) Imperator (Atmosphere) (1.1) Grattler (Atmosphere) (1.1) Hirudo (1.1) Imperator (1.1) Dark Dagger (1.1) Grattler (1.1) Hate (1.1) Supra (1.1) Dual Keres (1.1) Astilla Prime (1.1) Zenith (1.1) Tiberon (1.1) Aeolak (1.1) Exergis (1.1) Tenora (1.1) Battacor (1.1) Vaykor Hek (1.1) Stradavar (1.1) Scourge Prime (1.1) Fragor Prime (1.05) Guandao (1.05) Kuva Hind (1.05) Kuva Karak (1.05) Aklex (1.05) Redeemer (1.05) Vitrica (1.05) War (1.05) Tenet Flux Rifle (1.05) Silva & Aegis Prime (1.05) Keratinos (1.05) Verdilac (1.05) Phantasma (1.05) Fluctus (1.05) Korumm (1.05) Zakti Prime (1.05) Gaze (Primary) (1.05) Athodai (1.05) Galatine (1.05) Baza (1.05) Lanka (1.05) Fluctus (Atmosphere) (1.05) Sigma & Octantis (1.05) Sepulcrum (1.05) Kuva Quartakk (1.05) Corinth Prime (1) Alternox (1) Morgha (1) Stradavar Prime (1) Tenora Prime (1) Cortege (Atmosphere) (1) Morgha (Atmosphere) (1) Akaten (1) Multron (1) Sweeper Prime (1) Cryotra (1) Sweeper (1) Artax (1) Tombfinger (Primary) (1) Larkspur (Atmosphere) (1) Tazicor (1) Helstrum (1) Cortege (1) Larkspur (1) Batoten (1) Kuva Grattler (Atmosphere) (1) Lacerten (1) Vulcax (1) Sancti Tigris (1) Pangolin Prime (1) Rattleguts (Primary) (1) Quassus (1) Tiberon Prime (1) Halikar Wraith (1) Aksomati Prime (1) Orthos (1) Nagantaka Prime (1) Tatsu (1) Supra Vandal (1) Baza Prime (1) Kuva Seer (1) Stahlta (1) Akjagara Prime (1) Lenz (1) Tenet Spirex (0.95) Akstiletto (0.95) Aklex Prime (0.95) Cyath (0.95) Akarius (0.95) Tigris Prime (0.95) Atomos (0.95) Pyrana (0.95) Cyanex (0.95) Nikana (0.95) Nami Skyla Prime (0.95) Imperator Vandal (0.95) Arca Plasmor (0.95) Rubico (0.95) Kuva Tonkor (0.95) Imperator Vandal (Atmosphere) (0.95) Rakta Dark Dagger (0.95) Kuva Ayanga (0.95) Kuva Ayanga (Atmosphere) (0.95) Skiajati (0.9) Nepheri (0.9) Vermisplicer (Primary) (0.9) Galatine Prime (0.9) Euphona Prime (0.9) Kuva Kohm (0.9) Gaze (Secondary) (0.9) Kuva Hek (0.9) Twin Basolk (1.3) Spira (1.3) Falcor (1.3) Dread (1.3) Arca Titron (1.3) Mire (1.3) Akbolto (1.3) Akbronco Prime (1.3) Kulstar (1.3) Fang Prime (1.3) Latron Prime (1.3) Prisma Gorgon (1.3) Sporothrix (1.3) Dual Decurion (Atmosphere) (1.3) Snipetron (1.3) Javlok (1.3) Secura Penta (1.3) Glaxion (1.3) Dual Decurion (1.3) Nami Skyla (1.3) Obex (1.3) Dark Split-Sword (Heavy Blade) (1.3) Cobra & Crane (1.3) Dark Split-Sword (Dual Swords) (1.3) Despair (1.3) Mios (1.3) Vaykor Sydon (1.3) Tekko Prime (1.3) Secura Dual Cestra (1.3) Twin Rogga (1.3) Glaive (1.3) Hikou (1.3) Prisma Angstrum (1.3) Caustacyst (1.3) Pathocyst (1.3) Scindo Prime (1.3) Skana (1.3) Scoliac (1.3) Sybaris (1.3) Cerata (1.3) Kohm (1.3) Prisma Grakata (1.3) Nagantaka (1.3) Veldt (1.3) Cyngas (1.3) Grinlok (1.3) Cyngas (Atmosphere) (1.3) Hema (1.3) Braton Vandal (1.3) Verglas (1.3) Ogris (1.3) Rabvee (1.3) Cernos (1.3) Tonkor (1.3) Kronsh (1.3) Boltor (1.3) Torid (1.3) Cadus (1.29) Karak Wraith (1.28) Arum Spinosa (1.25) Lex (1.25) Prisma Obex (1.25) Twin Kohmak (1.25) Deconstructor Prime (1.25) Venato (1.25) Knell (1.25) Ooltha (1.25) Quartakk (1.25) Tipedo Prime (1.25) Masseter (1.25) Simulor (1.25) Zakti (1.25) Aksomati (1.25) Deconstructor (1.25) Ballistica (1.25) Dual Ichor (1.25) Azima (1.25) Lecta (1.25) Glaxion Vandal (1.25) Ohma (1.25) Phaedra (Atmosphere) (1.25) Panthera Prime (1.25) Phaedra (1.25) Brakk (1.25) Wolf Sledge (1.25) Braton Prime (1.25) Snipetron Vandal (1.25) Astilla (1.25) Prisma Dual Decurions (Atmosphere) (1.25) Prisma Dual Decurions (1.25) Daikyu (1.25) Telos Akbolto (1.25) Zylok (1.25) Akvasto (1.25) Hikou Prime (1.25) Cernos Prime (1.25) Boltace (1.25) Argonak (1.25) Rakta Cernos (1.25) Dual Kamas Prime (1.25) Sancti Magistar (1.25) Dex Sybaris (1.25) Destreza (1.25) Carmine Penta (1.25) Prisma Grinlok (1.245) Vulklok (1.245) Prime Laser Rifle (1.21) Laser Rifle (1.21) Volnus Prime (1.2) Jat Kusar (1.2) Ceti Lacera (1.2) Secura Lecta (1.2) Corvas (1.2) Corvas (Atmosphere) (1.2) Twin Krohkur (1.2) Fragor (1.2) Pulmonars (1.2) Dual Cleavers (1.2) Silva & Aegis (1.2) Dehtat (1.2) Rakta Ballistica (1.2) Skana Prime (1.2) Akbolto Prime (1.2) Zymos (1.2) Quatz (1.2) Pandero (1.2) Ballistica Prime (1.2) Ocucor (1.2) Cycron (1.2) Velox (1.2) Scourge (1.2) Sybaris Prime (1.2) Basmu (1.2) Zhuge (1.2) Strun Prime (1.2) Hek (1.2) Synoid Simulor (1.2) Boltor Prime (1.2) Telos Boltor (1.2) Pox (1.2) Spira Prime (1.2) Marelok (1.2) Twin Gremlins (1.2) Magnus Prime (1.2) Lex Prime (1.2) Akvasto Prime (1.2) Hystrix (1.2) Prisma Skana (1.2) Plinx (1.2) Twin Grakatas (1.2) Soma (1.15) Corinth (1.15) Zhuge Prime (1.15) Opticor (1.15) Quellor (1.15) Detron (1.15) Dragon Nikana (1.15) Zarr (1.15) Ferrox (1.15) Tigris (1.15) Atterax (1.15) Rumblejack (1.15) Gammacor (1.15) Furax Wraith (1.15) Broken War (1.15) Sicarus Prime (1.15) Zenistar (1.15) Sonicor (1.15) Sarpa (1.15) Kompressa (1.15) Kuva Drakgoon (1.15) Prisma Twin Gremlins (1.15) Ghoulsaw (1.15) Mara Detron (1.15) Komorex (1.15) Tenet Tetra (1.15) Catabolyst (1.15) Destreza Prime (1.14) Harpak (1.55) Flux Rifle (1.55) Magnus (1.53) Kraken (1.53) Cestra (1.52) Akzani (1.52) Aklato (1.52) MK1-Kunai (1.51) Kunai (1.51) Bolto (1.51) Amphis (1.5) Seer (1.5) Ankyros (1.5) Tetra (1.5) Miter (1.5) Mutalist Quanta (1.5) Spectra (1.49) Ether Daggers (1.49) Dark Sword (1.48) Stug (1.48) Heat Sword (1.48) Dual Skana (1.48) Cronus (1.48) Plasma Sword (1.48) Pangolin Sword (1.47) Kama (1.47) Kogake (1.46) Anku (1.46) Phage (1.46) Convectrix (1.46) Deth Machine Rifle Prime (1.455) Deth Machine Rifle (1.455) Twin Vipers (1.45) Nukor (1.45) Burst Laser (1.45) Bronco (1.45) Prisma Machete (1.45) MK1-Furax (1.45) Dual Ether (1.45) Kestrel (1.45) Ether Reaper (1.45) Afuris (1.45) Tysis (1.45) Machete (1.45) Viper (1.45) Ankyros Prime (1.45) Prisma Burst Laser (1.45) Vulkar (1.45) Buzlok (1.45) Burston (1.45) Prisma Tetra (1.45) MK1-Paris (1.45) Boar (1.45) MK1-Strun (1.45) Dual Zoren (1.44) Gram (1.44) Heat Dagger (1.44) Talons (1.44) Halikar (1.44) Ether Sword (1.44) Dual Heat Swords (1.44) Ceramic Dagger (1.43) Kronen (1.43) Nami Solo (1.43) Hind (1.42) Attica (1.415) Ninkondi (1.41) Twin Vipers Wraith (1.41) Castanas (1.4) Drakgoon (1.4) Vulkar Wraith (1.4) Kogake Prime (1.4) Broken Scepter (1.4) Gorgon (1.4) Panthera (1.4) Tekko (1.4) Dual Raza (1.4) Latron (1.4) Jaw Sword (1.4) Machete Wraith (1.4) MK1-Bo (1.4) Okina (1.4) Prova (1.4) Quanta (1.4) Endura (1.4) Gazal Machete (1.4) MK1-Furis (1.4) Viper Wraith (1.4) Vasto (1.4) Paris (1.4) Lato (1.4) Embolist (1.4) Quanta Vandal (1.4) Spectra Vandal (1.4) Bronco Prime (1.4) Dera (1.4) Strun (1.4) Dex Furis (1.39) Serro (1.38) Ripkas (1.38) Furax (1.38) Tonbo (1.38) Fang (1.36) Orvius (1.35) Kesheg (1.35) Lato Vandal (1.35) Penta (1.35) Galvacord (1.35) Furis (1.35) Dual Kamas (1.35) Pupacyst (1.35) Karyst (1.35) Fusilai (1.35) Angstrum (1.35) MK1-Braton (1.35) Akbronco (1.35) Dual Cestra (1.35) Paris Prime (1.35) Dual Toxocyst (1.35) Kohmak (1.35) Dera Vandal (1.35) Latron Wraith (1.35) Cassowar (1.35) Gorgon Wraith (1.35) Burston Prime (1.35) Shaku (1.35) Karak (1.35) Sydon (1.35) Sheev (1.35) Mutalist Cernos (1.35) Stubba (1.35) Sibear (1.35) Vasto Prime (1.35) Akmagnus (1.35) Grakata (1.35) Ack & Brunt (1.35) Lato Prime (1.35) Strun Wraith (1.35) Scindo (1.35) Korrudo (1.35) Prova Vandal (1.35) Kreska (1.35) Dex Dakra (1.35) Volnus (1.35) Heliocor (1.35) Jat Kittag (1.35) Braton (1.35) Magistar (1.35) Gunsen (1.35) Bo (1.35) Sancti Castanas (1.35) Bo Prime (1.35) Synoid Heliocor (1.35) Krohkur (1.35) Boar Prime (1.34) Sobek (1.33) Acrid (1.33) Stinger (1.315) Paracyst (1.315) Synapse (1.315) Tipedo (1.31) Lacera (1.31)";
-
-        //var txt = rawList.charAt(3);
-
-        
-
-        //iterate every char? save position, then cut out the name and dispo?
-        var testA = "(";
-        var testB = ")";
-        var nameIndexStart = -1;
-        var nameIndexEnd = 0;
-        var dispoIndexStart = -1;
-        var dispoIndexEnd = 0;
-        var nameSet = false;
-        var dispoSet = false;
-
-        var tmpName = "";
-        var tmpDispo = "";
-
-        for( i=0;i<rawList.length;i++)
-        {
-            //txt+="y."+i;
-            // assuming string starts with a name
-            if( !nameSet )
-            {
-                if(nameIndexStart == -1) // -1 as 'not set'
-                    nameIndexStart = i+1;
-
-                if( rawList.charAt(i) == testA.charAt(0) )//
-                {
-                    if(rawList.charAt(i+1) == "1" || rawList.charAt(i+1) == "0")
-                    {
-                        nameIndexEnd = i-1;
-                        dispoIndexStart = i+1;
-                        tmpName = rawList.substring(nameIndexStart,nameIndexEnd);
-                        nameSet = true;
-                    }
-
-                }
-            }
-
-            if( nameSet && !dispoSet ) // when we have name, continuing in the same step to begin dispo check
-            {
-                if( rawList.charAt(i) == testA.charAt(0) )//
-                {
-                    dispoIndexStart = i+1;
-                }
-                if( rawList.charAt(i) == testB.charAt(0) )//
-                {
-                    dispoIndexEnd = i;
-                    tmpDispo = rawList.substring(dispoIndexStart,dispoIndexEnd);
-                    dispoSet = true;
-                }
-            }
-
-            if( nameSet && dispoSet ) // resetting once we find a name and dispo
-            {
-                //enter the item
-                weapons.push( new Weapon( tmpName, tmpDispo ) ); 
-                nameSet = false;
-                nameIndexStart = -1;
-                dispoSet = false;
-                dispoIndexStart = -1;
-                //txt += tmpName+tmpDispo;
-            }
-        }
-
-        //document.getElementById("list").innerHTML = txt;
-
-    }
-
-
-
-    function WeaponSelect( n, d )
+    function WeaponSelect( n, d, t )
     {
-        
         //document.getElementById('activeDispoSelection').value = d;
+        var wpnType = "???";
+
+        selectedWeapon = n;
+
+        if( t == "R" ) wpnType = "Rifle";
+        if( t == "S" ) wpnType = "Shotgun";
+        if( t == "P" ) wpnType = "Pistol";
+        if( t == "A" ) wpnType = "Archgun";
+        if( t == "M" ) wpnType = "Melee";
+
+        document.getElementById("form_type").value = t;
+        document.getElementById("form_dispo").value = d;
 
         var txt = "";
         txt+="<b>";
-        txt += n + " | " + d + " | ";
+        txt += n + " | " + d + " | " + wpnType + " ";
         txt+="</b>"
         txt+="<span class=\"s1\"><i>Shares Dispo With;</i> ";
 
@@ -192,83 +181,703 @@ window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.ke
         txt = txt.substring(0,txt.length-2);
         txt += "</span>";
         document.getElementById("selection").innerHTML = txt;
-        
+        RenderWeaponList();
+        FormChange();
     }
 
-    function SetDispo( name, newDispo )
-    {
-        var found = false;
+    function DispositionUpdates ()
+    {   
+        var txt = "";
+        txt = " Tenet Envoy R(0.65) Xoris M(0.65) Tatsu Prime M(0.65) Phantasma Prime S(0.65) Cedo S(0.65) Guandao Prime M(0.65) Nikana Prime M(0.6) Pyrana Prime P(0.6) Ignis R(0.6) Acceltra R(0.6) Dual Keres Prime M(0.6) Aegrit P(0.6) Innodem M(0.6) Paracesis M(0.6) Nataruk R(0.6) Praedos M(0.6) Phenmor R(0.6) Kuva Bramma R(0.6) Redeemer Prime M(0.6) Rubico Prime R(0.6) Plague Kripath M(0.6) Kuva Zarr R(0.6) Felarx S(0.6) Kronen Prime M(0.6) Catchmoon (Secondary) P(0.55) Tenet Arca Plasmor S(0.55) Sporelacer (Secondary) P(0.55) Ignis Wraith R(0.55) Epitaph P(0.55) Steflos S(0.5) Mausolon A(0.5) Perigale R(0.5) Tenet Ferrox R(0.5) Stropha M(0.5) Afuris Prime P(0.5) Cobra & Crane Prime M(0.5) Sarofang M(0.5) Laetum P(0.5) Corufell M(0.5) Kuva Nukor P(0.5) Tenet Plinx P(0.5) Amprex R(0.85) Tenet Grigori M(0.85) Tenet Detron P(0.85) Staticor P(0.85) Hystrix Prime P(0.85) Pennant M(0.85) Kuva Twin Stubbas P(0.85) Balla M(0.85) Kuva Chakkhurr R(0.85) Kuva Brakk P(0.85) Vectis Prime R(0.85) Trumna R(0.85) Corvas Prime A(0.8) Rattleguts (Secondary) P(0.8) Venka Prime M(0.8) Lesion M(0.8) Afentis R(0.8) Vericres M(0.8) Tenet Agendus M(0.8) Akstiletto Prime P(0.8) Fulmin R(0.8) Kuva Shildeg M(0.75) Gram Prime M(0.75) Hespar M(0.75) Plague Keewar M(0.75) Dokrahm M(0.75) Tenet Exec M(0.75) Knell Prime P(0.75) Tenet Diplos P(0.75) Shedu R(0.75) Tenet Livia M(0.75) Bubonico S(0.75) Vastilok M(0.75) Glaive Prime M(0.7) Tombfinger (Secondary) P(0.7) Sepfahn M(0.7) Tenet Cycron P(0.7) Kuva Ogris R(0.7) Kuva Grattler A(0.7) Proboscis Cernos R(0.7) Slaytra M(0.7) Reaper Prime M(0.7) Orthos Prime M(0.7) Ambassador R(1.1) Arca Scisco P(1.1) Sicarus P(1.1) Dakra Prime M(1.1) Telos Boltace M(1.1) Catchmoon (Primary) S(1.1) Prisma Dual Cleavers M(1.1) Vaykor Marelok P(1.1) Synoid Gammacor P(1.1) Vectis R(1.1) Kuva Kraken P(1.1) Soma Prime R(1.1) Akjagara P(1.1) Pandero Prime P(1.1) Opticor Vandal R(1.1) Venka M(1.1) Ninkondi Prime M(1.1) Velocitus A(1.1) Sporelacer (Primary) S(1.1) Vermisplicer (Secondary) P(1.1) Mewan M(1.1) Karyst Prime M(1.1) Hirudo M(1.1) Imperator A(1.1) Dark Dagger M(1.1) Grattler A(1.1) Hate R(1.1) Supra R(1.1) Dual Keres M(1.1) Astilla Prime S(1.1) Zenith R(1.1) Tiberon M(1.1) Aeolak R(1.1) Exergis S(1.1) Tenora R(1.1) Battacor R(1.1) Vaykor Hek S(1.1) Stradavar R(1.1) Scourge Prime R(1.1) Fragor Prime M(1.05) Guandao M(1.05) Kuva Hind R(1.05) Kuva Karak R(1.05) Aklex P(1.05) Redeemer M(1.05) Vitrica M(1.05) War M(1.05) Tenet Flux Rifle R(1.05) Silva & Aegis Prime M(1.05) Keratinos M(1.05) Verdilac M(1.05) Phantasma S(1.05) Fluctus A(1.05) Korumm M(1.05) Zakti Prime P(1.05) Gaze (Primary) R(1.05) Athodai P(1.05) Galatine M(1.05) Baza R(1.05) Lanka R(1.05) Sigma & Octantis M(1.05) Sepulcrum P(1.05) Kuva Quartakk R(1.05) Corinth Prime S(1) Alternox R(1) Morgha A(1) Stradavar Prime R(1) Tenora Prime R(1) Akaten M(1) Multron R(1) Sweeper Prime S(1) Cryotra R(1) Sweeper S(1) Artax R(1) Tombfinger (Primary) R(1) Tazicor R(1) Helstrum R(1) Cortege A(1) Larkspur A(1) Batoten M(1) Lacerten M(1) Vulcax R(1) Sancti Tigris S(1) Pangolin Prime M(1) Rattleguts (Primary) R(1) Quassus M(1) Tiberon Prime R(1) Halikar Wraith M(1) Aksomati Prime P(1) Orthos M(1) Nagantaka Prime M(1) Tatsu M(1) Supra Vandal R(1) Baza Prime R(1) Kuva Seer P(1) Stahlta R(1) Akjagara Prime P(1) Lenz R(1) Tenet Spirex P(0.95) Akstiletto P(0.95) Aklex Prime P(0.95) Cyath M(0.95) Akarius P(0.95) Tigris Prime S(0.95) Atomos P(0.95) Pyrana P(0.95) Cyanex P(0.95) Nikana M(0.95) Nami Skyla Prime M(0.95) Imperator Vandal A(0.95) Arca Plasmor S(0.95) Rubico R(0.95) Kuva Tonkor R(0.95) Rakta Dark Dagger M(0.95) Kuva Ayanga A(0.95) Skiajati M(0.9) Nepheri M(0.9) Vermisplicer (Primary) R(0.9) Galatine Prime M(0.9) Euphona Prime P(0.9) Kuva Kohm S(0.9) Gaze (Secondary) P(0.9) Kuva Hek S(0.9) Twin Basolk M(1.3) Spira P(1.3) Falcor M(1.3) Dread R(1.3) Arca Titron M(1.3) Mire M(1.3) Akbolto P(1.3) Akbronco Prime P(1.3) Kulstar P(1.3) Fang Prime M(1.3) Latron Prime R(1.3) Prisma Gorgon R(1.3) Sporothrix R(1.3) Snipetron R(1.3) Javlok R(1.3) Secura Penta R(1.3) Glaxion R(1.3) Dual Decurion A(1.3) Nami Skyla M(1.3) Obex M(1.3) Dark Split-Sword (Heavy Blade) M(1.3) Cobra & Crane M(1.3) Dark Split-Sword (Dual Swords) M(1.3) Despair P(1.3) Mios M(1.3) Vaykor Sydon M(1.3) Tekko Prime M(1.3) Secura Dual Cestra P(1.3) Twin Rogga P(1.3) Glaive M(1.3) Hikou P(1.3) Prisma Angstrum P(1.3) Caustacyst M(1.3) Pathocyst M(1.3) Scindo Prime M(1.3) Skana M(1.3) Scoliac M(1.3) Sybaris R(1.3) Cerata M(1.3) Kohm S(1.3) Prisma Grakata R(1.3) Nagantaka M(1.3) Veldt R(1.3) Cyngas A(1.3) Grinlok R(1.3) Hema R(1.3) Braton Vandal R(1.3) Verglas M(1.3) Ogris R(1.3) Rabvee M(1.3) Cernos R(1.3) Tonkor R(1.3) Kronsh M(1.3) Boltor R(1.3) Torid R(1.3) Cadus M(1.29) Karak Wraith R(1.28) Arum Spinosa M(1.25) Lex P(1.25) Prisma Obex M(1.25) Twin Kohmak P(1.25) Deconstructor Prime M(1.25) Venato M(1.25) Knell P(1.25) Ooltha M(1.25) Quartakk R(1.25) Tipedo Prime M(1.25) Masseter M(1.25) Simulor R(1.25) Zakti P(1.25) Aksomati P(1.25) Deconstructor M(1.25) Ballistica P(1.25) Dual Ichor M(1.25) Azima P(1.25) Lecta M(1.25) Glaxion Vandal R(1.25) Ohma M(1.25) Panthera Prime R(1.25) Phaedra A(1.25) Brakk P(1.25) Wolf Sledge M(1.25) Braton Prime R(1.25) Snipetron Vandal R(1.25) Astilla S(1.25) Prisma Dual Decurions A(1.25) Daikyu R(1.25) Telos Akbolto P(1.25) Zylok P(1.25) Akvasto P(1.25) Hikou Prime P(1.25) Cernos Prime R(1.25) Boltace R(1.25) Argonak R(1.25) Rakta Cernos R(1.25) Dual Kamas Prime M(1.25) Sancti Magistar M(1.25) Dex Sybaris R(1.25) Destreza M(1.25) Carmine Penta R(1.25) Prisma Grinlok R(1.245) Vulklok R(1.245) Prime Laser Rifle R(1.21) Laser Rifle R(1.21) Volnus Prime M(1.2) Jat Kusar M(1.2) Ceti Lacera M(1.2) Secura Lecta M(1.2) Corvas A(1.2) Twin Krohkur M(1.2) Fragor M(1.2) Pulmonars M(1.2) Dual Cleavers M(1.2) Silva & Aegis M(1.2) Dehtat M(1.2) Rakta Ballistica P(1.2) Skana Prime M(1.2) Akbolto Prime P(1.2) Zymos P(1.2) Quatz P(1.2) Pandero P(1.2) Ballistica Prime P(1.2) Ocucor P(1.2) Cycron P(1.2) Velox P(1.2) Scourge R(1.2) Sybaris Prime R(1.2) Basmu R(1.2) Zhuge R(1.2) Strun Prime S(1.2) Hek S(1.2) Synoid Simulor R(1.2) Boltor Prime R(1.2) Telos Boltor R(1.2) Pox P(1.2) Spira Prime P(1.2) Marelok P(1.2) Twin Gremlins P(1.2) Magnus Prime P(1.2) Lex Prime P(1.2) Akvasto Prime P(1.2) Hystrix P(1.2) Prisma Skana M(1.2) Plinx P(1.2) Twin Grakatas P(1.2) Soma R(1.15) Corinth S(1.15) Zhuge Prime R(1.15) Opticor R(1.15) Quellor R(1.15) Detron P(1.15) Dragon Nikana M(1.15) Zarr R(1.15) Ferrox R(1.15) Tigris S(1.15) Atterax M(1.15) Rumblejack M(1.15) Gammacor P(1.15) Furax Wraith M(1.15) Broken War M(1.15) Sicarus Prime P(1.15) Zenistar M(1.15) Sonicor P(1.15) Sarpa P(1.15) Kompressa P(1.15) Kuva Drakgoon S(1.15) Prisma Twin Gremlins P(1.15) Ghoulsaw M(1.15) Mara Detron P(1.15) Komorex R(1.15) Tenet Tetra R(1.15) Catabolyst P(1.15) Destreza Prime M(1.14) Harpak R(1.55) Flux Rifle R(1.55) Magnus P(1.53) Kraken P(1.53) Cestra P(1.52) Akzani P(1.52) Aklato P(1.52) MK1-Kunai P(1.51) Kunai P(1.51) Bolto P(1.51) Amphis M(1.5) Seer P(1.5) Ankyros M(1.5) Tetra R(1.5) Miter R(1.5) Mutalist Quanta R(1.5) Spectra P(1.49) Ether Daggers M(1.49) Dark Sword M(1.48) Stug P(1.48) Heat Sword M(1.48) Dual Skana M(1.48) Cronus M(1.48) Plasma Sword M(1.48) Pangolin Sword M(1.47) Kama M(1.47) Kogake M(1.46) Anku M(1.46) Phage R(1.46) Convectrix R(1.46) Deth Machine Rifle Prime R(1.455) Deth Machine Rifle R(1.455) Twin Vipers P(1.45) Nukor P(1.45) Burst Laser P(1.45) Bronco P(1.45) Prisma Machete M(1.45) MK1-Furax M(1.45) Dual Ether M(1.45) Kestrel M(1.45) Ether Reaper M(1.45) Afuris P(1.45) Tysis P(1.45) Machete M(1.45) Viper P(1.45) Ankyros Prime M(1.45) Prisma Burst Laser P(1.45) Vulkar R(1.45) Buzlok R(1.45) Burston R(1.45) Prisma Tetra R(1.45) MK1-Paris R(1.45) Boar S(1.45) MK1-Strun S(1.45) Dual Zoren M(1.44) Gram M(1.44) Heat Dagger M(1.44) Talons P(1.44) Halikar M(1.44) Ether Sword M(1.44) Dual Heat Swords M(1.44) Ceramic Dagger M(1.43) Kronen M(1.43) Nami Solo M(1.43) Hind R(1.42) Attica R(1.415) Ninkondi M(1.41) Twin Vipers Wraith P(1.41) Castanas P(1.4) Drakgoon S(1.4) Vulkar Wraith R(1.4) Kogake Prime M(1.4) Broken Scepter M(1.4) Gorgon R(1.4) Panthera R(1.4) Tekko M(1.4) Dual Raza M(1.4) Latron R(1.4) Jaw Sword M(1.4) Machete Wraith M(1.4) MK1-Bo M(1.4) Okina M(1.4) Prova M(1.4) Quanta R(1.4) Endura M(1.4) Gazal Machete M(1.4) MK1-Furis M(1.4) Viper Wraith P(1.4) Vasto P(1.4) Paris R(1.4) Lato P(1.4) Embolist P(1.4) Quanta Vandal R(1.4) Spectra Vandal P(1.4) Bronco Prime P(1.4) Dera R(1.4) Strun S(1.4) Dex Furis P(1.39) Serro M(1.38) Ripkas M(1.38) Furax M(1.38) Tonbo M(1.38) Fang M(1.36) Orvius M(1.35) Kesheg M(1.35) Lato Vandal P(1.35) Penta R(1.35) Galvacord M(1.35) Furis P(1.35) Dual Kamas M(1.35) Pupacyst M(1.35) Karyst M(1.35) Fusilai P(1.35) Angstrum P(1.35) MK1-Braton R(1.35) Akbronco P(1.35) Dual Cestra P(1.35) Paris Prime R(1.35) Dual Toxocyst P(1.35) Kohmak P(1.35) Dera Vandal R(1.35) Latron Wraith R(1.35) Cassowar M(1.35) Gorgon Wraith R(1.35) Burston Prime R(1.35) Shaku M(1.35) Karak R(1.35) Sydon M(1.35) Sheev M(1.35) Mutalist Cernos R(1.35) Stubba P(1.35) Sibear M(1.35) Vasto Prime P(1.35) Akmagnus P(1.35) Grakata R(1.35) Ack & Brunt M(1.35) Lato Prime P(1.35) Strun Wraith S(1.35) Scindo M(1.35) Korrudo M(1.35) Prova Vandal M(1.35) Kreska M(1.35) Dex Dakra M(1.35) Volnus M(1.35) Heliocor M(1.35) Jat Kittag M(1.35) Braton R(1.35) Magistar M(1.35) Gunsen M(1.35) Bo M(1.35) Sancti Castanas P(1.35) Bo Prime M(1.35) Synoid Heliocor M(1.35) Krohkur M(1.35) Boar Prime S(1.34) Sobek S(1.33) Acrid P(1.33) Stinger R(1.315) Paracyst R(1.315) Synapse R(1.315) Tipedo M(1.31) Lacera M(1.31)";
+        WriteDisposition( txt );
+        // BARUUK PRIME
+        //https://forums.warframe.com/topic/1334648-december-2022-riven-dispositions/
+        txt = " Aeolak R(1.1) Afentis R(0.8) Alternox R(1) Nagantaka Prime R(1) Proboscis Cernos R(0.7) Tenet Flux Rifle R(1.05) Phantasma Prime S(0.65) Aegrit P(0.6) Akjagara P(1.1) Akjagara Prime P(1) Hystrix Prime P(0.85) Magnus Prime P(1.2) Tenet Detron P(0.85) Tenet Diplos P(0.75) Tenet Spirex P(0.95) Tombfinger (Secondary) P(0.7) Balla M(8.5) Dual Kamas M(1.35) Dual Kamas Prime M(1.25) Ghoulsaw M(1.15) Hespar M(0.75) Innodem M(0.6) Karyst Prime M(1.1) Korumm M(1.05) Nepheri M(0.9) Pupacyst M(1.35) Rumblejack M(1.15) Slaytra M(0.7) Tatsu Prime M(0.65) Telos Boltace M(1.1) Tenet Grigori M(0.85) Tenet Livia M(0.75) Venato M(1.25) Verdilac M(1.05) Vericres M(0.8) Corvas Prime A(0.8)";
+        WriteDisposition( txt );
+        // HILDRYN PRIME
+        //
 
-        for( i=0; i<weapons.length; i++ )
+        //etc..
+    }
+
+    function WriteDisposition ( t )
+    {
+        //iterate every char? save position, then cut out the name and dispo?
+        var testA = "(";
+        var testB = ")";
+        var nameIndexStart = -1;
+        var nameIndexEnd = 0;
+        var dispoIndexStart = -1;
+        var dispoIndexEnd = 0;
+        var nameSet = false;
+        var dispoSet = false;
+        var typeSet = false;
+
+        var exists = false;
+
+        var tmpName = "";
+        var tmpDispo = "";
+        var tmpType = "";
+
+        for( i=0;i<t.length;i++)
         {
-            if(weapons[i].weaponName == name)
+            //txt+="y."+i;
+            // assuming string starts with a name
+            if( !nameSet )
             {
-                weapons[i].dispo = newDispo;
-                found = true;
-                break;
+                if(nameIndexStart == -1) // -1 as 'not set'
+                    nameIndexStart = i+1;
+
+                if( t.charAt(i) == testA.charAt(0) )//
+                {
+                    if(t.charAt(i+1) == "1" || t.charAt(i+1) == "0")
+                    {
+                        nameIndexEnd = i-2;
+                        dispoIndexStart = i+1;
+                        tmpName = t.substring(nameIndexStart,nameIndexEnd);
+                        nameSet = true;
+                        tmpType = t.charAt(nameIndexEnd+1);
+                        typeSet = true;
+                    }
+
+                }
+            }
+
+            if( nameSet && !dispoSet ) // when we have name, continuing in the same step to begin dispo check
+            {
+                if( t.charAt(i) == testA.charAt(0) )//
+                {
+                    dispoIndexStart = i+1;
+                }
+                if( t.charAt(i) == testB.charAt(0) )//
+                {
+                    dispoIndexEnd = i;
+                    tmpDispo = t.substring(dispoIndexStart,dispoIndexEnd);
+                    dispoSet = true;
+                }
+            }
+
+            if( nameSet && dispoSet ) // resetting once we find a name and dispo
+            {
+                //enter the item
+                if(weapons.length != 0)
+                {
+                    for( ii=0; ii<weapons.length; ii++ )
+                    {
+                        if( weapons[ii].weaponName == tmpName )
+                        {
+                            //update current entry
+                            weapons[ii].dispo = tmpDispo;
+                            weapons[ii].weaponType = tmpType;
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if(!exists)
+                {
+                    weapons.push( new Weapon( tmpName, tmpDispo, tmpType ) ); 
+                }
+                
+                nameSet = false;
+                nameIndexStart = -1;
+                dispoSet = false;
+                dispoIndexStart = -1;
+                typeSet = false;
+                tmpName = "";
+                tmpDispo = "";
+                tmpType = "";
+                //txt += tmpName+tmpDispo;
             }
         }
-        if(!found)
+        //document.getElementById("list").innerHTML = txt;
+    }
+
+    function FormChange()
+    {
+        var category = document.getElementById("form_type").value;
+        var dispo = document.getElementById("form_dispo").value;
+        var bonus = document.getElementById("form_bonus").value;
+        var malus = document.getElementById("form_malus").value;
+        var bonus_mod = 0;
+        var malus_mod = 0;
+        var val = 0;
+        var txt = "";
+
+        dispo = Math.min(Math.max(dispo, 0.5), 1.55);
+
+        var vSpace = 6;
+        var dSpace = 24;
+
+        document.getElementById("stats").innerHTML = dispo + " " + category + " . " + bonus + " " + malus;
+
+        if( bonus == 2 && malus == 0){ bonus_mod = 0.99; malus_mod = 0; }
+        if( bonus == 2 && malus == 1){ bonus_mod = 1.2375; malus_mod = -0.495; }
+        if( bonus == 3 && malus == 0){ bonus_mod = 0.75; malus_mod = 0; }
+        if( bonus == 3 && malus == 1){ bonus_mod = 0.9375; malus_mod = -0.75; }
+
+        if( category == "R" )
         {
-            weapons.push( new Weapon( name, newDispo ) );
+            document.getElementById("stats").innerHTML = "Rifle";
+            //  header
+            txt+=""+FormatNum(dispo,5);
+            txt+=""+Spaces(dSpace-2)+"min&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 165;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 149.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 120;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Elemental Damage 
+            txt+=FormatString("Elemental Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 60.03;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 49.95;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Projectile Speed 
+            txt+=FormatString("Projectile Speed",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Zoom 
+            txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Punch Through 
+            txt+=FormatString("Punch Through",dSpace)+"&nbsp;"; val = 2.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+
+            txt+="<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 165;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 149.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 120;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 60.03;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 49.95;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Projectile Speed 
+            txt+=FormatString("Projectile Speed",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Zoom 
+            txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );  
+        }
+        else if( category == "S" )
+        {
+            //  header
+            txt+=""+FormatNum(dispo,5);
+            txt+=""+Spaces(dSpace-2)+"min&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 164.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Elemental Damage 
+            txt+=FormatString("Elemental Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 89.1;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Projectile Speed 
+            txt+=FormatString("Projectile Speed",dSpace)+"&nbsp;"; val = 89.1;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 49.45;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Punch Through 
+            txt+=FormatString("Punch Through",dSpace)+"&nbsp;"; val = 2.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+
+            txt+="<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 164.7;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 89.1;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Projectile Speed 
+            txt+=FormatString("Projectile Speed",dSpace)+"&nbsp;"; val = 89.1;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 49.45;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+
+        }
+        else if( category == "P" )
+        {
+            //  header
+            txt+=""+FormatNum(dispo,5);
+            txt+=""+Spaces(dSpace-2)+"min&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 219.6;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 149.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Elemental Damage 
+            txt+=FormatString("Elemental Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 74.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Projectile Speed 
+            txt+=FormatString("Projectile Speed",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Zoom 
+            txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 80.1;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Punch Through 
+            txt+=FormatString("Punch Through",dSpace)+"&nbsp;"; val = 2.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+
+            txt+="<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 219.6;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.97;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 149.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 74.7;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Projectile Speed 
+            txt+=FormatString("Projectile Speed",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Zoom 
+            txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );  
+        }
+        else if( category == "A" )
+        {
+            //  header
+            txt+=""+FormatNum(dispo,5);
+            txt+=""+Spaces(dSpace-2)+"min&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 60.3;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 80.1;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Elemental Damage 
+            txt+=FormatString("Elemental Damage",dSpace)+"&nbsp;"; val = 119.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 60.3;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 60.03;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 60.3;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Zoom 
+            txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Punch Through 
+            txt+=FormatString("Punch Through",dSpace)+"&nbsp;"; val = 2.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+
+            txt+="<br>";
+
+            // Multishot 
+            txt+=FormatString("Multishot",dSpace)+"&nbsp;"; val = 60.3;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage 
+            txt+=FormatString("Damage",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Physical Damage 
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Chance 
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Damage 
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 80.1;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Elemental Damage 
+            txt+=FormatString("Elemental Damage",dSpace)+"&nbsp;"; val = 119.7;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Chance 
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 60.3;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Duration 
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage to Faction 
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Fire Rate 
+            txt+=FormatString("Fire Rate",dSpace)+"&nbsp;"; val = 60.03;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Magazine Capacity 
+            txt+=FormatString("Magazine Capacity",dSpace)+"&nbsp;"; val = 60.3;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Ammo Maximum 
+            txt+=FormatString("Ammo Maximum",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Reload Speed 
+            txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 99.9;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Weapon Recoil 
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Zoom 
+            txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+
+        }
+        else if( category == "M" )
+        {
+            //  header
+            txt+=""+FormatNum(dispo,5);
+            txt+=""+Spaces(dSpace-2)+"min&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
+
+            // Melee Damage
+            txt+=FormatString("Melee Damage",dSpace)+"&nbsp;"; val = 164.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Physical Damage
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Chance
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 180;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Damage
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Elemental damage
+            txt+=FormatString("Elemental damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Chance
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Status Duration
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Damage to Faction
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Heavy Attack Eff.
+            txt+=FormatString("Heavy Attack Eff.",dSpace)+"&nbsp;"; val = 73.44;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Attack Speed
+            txt+=FormatString("Attack Speed",dSpace)+"&nbsp;"; val = 54.9;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Finisher Damage
+            txt+=FormatString("Finisher Damage",dSpace)+"&nbsp;"; val = 119.7;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Range
+            txt+=FormatString("Range",dSpace)+"&nbsp;"; val = 1.94;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Critical Chance Slide
+            txt+=FormatString("Critical Chance Slide",dSpace)+"&nbsp;"; val = 120;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Combo Duration
+            txt+=FormatString("Combo Duration",dSpace)+"&nbsp;"; val = 8.1;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Initial Combo
+            txt+=FormatString("Initial Combo",dSpace)+"&nbsp;"; val = 24.5;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+            // Combo Count Chance
+            txt+=FormatString("Combo Count Chance",dSpace)+"&nbsp;"; val = 58.77;
+            txt+=FormatRange( dispo, bonus_mod, val, vSpace );
+
+            txt+="<br>";
+
+            // Physical Damage
+            txt+=FormatString("Physical Damage",dSpace)+"&nbsp;"; val = 119.7;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Chance
+            txt+=FormatString("Critical Chance",dSpace)+"&nbsp;"; val = 180;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Damage
+            txt+=FormatString("Critical Damage",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Chance
+            txt+=FormatString("Status Chance",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Status Duration
+            txt+=FormatString("Status Duration",dSpace)+"&nbsp;"; val = 99;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Damage to Faction
+            txt+=FormatString("Damage to Faction",dSpace)+"&nbsp;"; val = 45;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Heavy Attack Eff.
+            txt+=FormatString("Heavy Attack Eff.",dSpace)+"&nbsp;"; val = 73.44;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Attack Speed
+            txt+=FormatString("Attack Speed",dSpace)+"&nbsp;"; val = 54.9;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Finisher Damage
+            txt+=FormatString("Finisher Damage",dSpace)+"&nbsp;"; val = 119.7;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Range
+            txt+=FormatString("Range",dSpace)+"&nbsp;"; val = 1.94;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Critical Chance Slide
+            txt+=FormatString("Critical Chance Slide",dSpace)+"&nbsp;"; val = 120;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Combo Duration
+            txt+=FormatString("Combo Duration",dSpace)+"&nbsp;"; val = 8.1;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+            // Combo Count Chance
+            txt+=FormatString("Combo Count Chance",dSpace)+"&nbsp;"; val = 104.85;
+            txt+=FormatRange( dispo, malus_mod, val, vSpace );
+
+        }
+        txt+="<br><br>";
+
+        document.getElementById("stats").innerHTML = txt;
+    }
+    function FormatRange( dispo, modifier, baseval, vSpace ){
+        var txt = "";
+        txt+="<span class=\"min\">"+FormatNum( (((baseval*0.90)*dispo)*modifier).toFixed(1), vSpace )+"&nbsp;</span>";
+        txt+="<span class=\"max\">"+FormatNum( (((baseval*1.10)*dispo)*modifier).toFixed(1), vSpace )+"&nbsp;</span>";
+        txt+="<span class=\"avg\">"+FormatNum( (((baseval*1)*dispo)*modifier).toFixed(1), vSpace )+"&nbsp;</span><br>";
+        return txt;
+    }
+
+    function FormatNum( num, length ){
+        var stringNum = ""+num;
+        if( stringNum.length >= length )
+            return stringNum;
+
+        if( stringNum.length < length )
+        {
+            return Spaces(length-stringNum.length)+""+stringNum;
         }
     }
 
-    function DispoUpdates()
+    function FormatString( str, length ){
+        if( str.length >= length )
+            return;
+
+        if( str.length < length )
+        {
+            return Spaces(length-str.length)+""+str;
+        }
+    }
+
+    function Spaces( num )
     {
-        // here is just some additions and edits to some dispos. so new weapons and new dispos here.
-        // BARUUK PRIME // https://forums.warframe.com/topic/1334648-december-2022-riven-dispositions/
-        SetDispo("Aeolak","1.1");
-        SetDispo("Afentis","0.8");
-        SetDispo("Alternox","1");
-        SetDispo("Nagantaka Prime","1");
-        SetDispo("Proboscis Cernos","0.7");
-        SetDispo("Tenet Flux Rifle","1.05");
-
-        SetDispo("Phantasma Prime","0.65");
-
-        SetDispo("Aegrit","0.6");
-        SetDispo("Akjagara","1.1");
-        SetDispo("Akjagara Prime","1");
-        SetDispo("Hystrix Prime","0.85");
-        SetDispo("Magnus Prime","1.2");
-        SetDispo("Tenet Detron","0.85");
-        SetDispo("Tenet Diplos","0.75");
-        SetDispo("Tenet Spirex","0.95");
-        SetDispo("Tombfinger (Secondary)","0.7");
-
-        SetDispo("Balla","8.5");
-        SetDispo("Dual Kamas","1.35");
-        SetDispo("Dual Kamas Prime","1.25");
-        SetDispo("Ghoulsaw","1.15");
-        SetDispo("Hespar","0.75");
-        SetDispo("Innodem","0.6");
-        SetDispo("Karyst Prime","1.1");
-        SetDispo("Korumm","1.05");
-        SetDispo("Nepheri","0.9");
-        SetDispo("Pupacyst","1.35");
-        SetDispo("Rumblejack","1.15");
-        SetDispo("Slaytra","0.7");
-        SetDispo("Tatsu Prime","0.65");
-        SetDispo("Telos Boltace","1.1");
-        SetDispo("Tenet Grigori","0.85");
-        SetDispo("Tenet Livia","0.75");
-        SetDispo("Venato","1.25");
-        SetDispo("Verdilac","1.05");
-        SetDispo("Vericres","0.8");
-
-        SetDispo("Corvas Prime","0.8");
-
-
-        // UPDATE 30.5.5.6 HILDRYN PRIME
-        
-        // UPDATE 45.3.3.1 WISP PRIME etc.
+        var txt = "";
+        for( i=0; i<num; i++ )
+        {
+            txt += "&nbsp;"
+        }
+        return txt;
     }
 
     function SortWeaponList()
     {
-        innerHTMLtext = "";
-
         for( i=0; i<weapons.length; i++ )
         {
             weaponsAlphabetical.push( weapons[i].weaponName );
@@ -276,6 +885,12 @@ window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.ke
 
         weaponsAlphabetical.sort();
 
+        RenderWeaponList();
+    }
+
+    function RenderWeaponList()
+    {
+        var innerHTMLtext = "";
         for( i=0; i<weaponsAlphabetical.length; i++ )
         {
             for( ii=0; ii<weapons.length; ii++ )
@@ -283,21 +898,30 @@ window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.ke
                 if(weaponsAlphabetical[i] == weapons[ii].weaponName)
                 {
                     //innerHTMLtext += "<a href=\"#"+weapons[ii].dispo+"\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                    //innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                    if( weapons[ii].weaponName == selectedWeapon )
+                    {
+                        innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                    }
+                    else
+                    {
+                        innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                    }
                 }
             }
         }
-
         document.getElementById("list").innerHTML = innerHTMLtext;
     }
 
 
 var weapons = [];
 var weaponsAlphabetical = [];
+var selectedWeapon = "";
 
-PrepBaseList();
-DispoUpdates();
+DispositionUpdates();
+
 SortWeaponList();
+
 
 </script>
 
