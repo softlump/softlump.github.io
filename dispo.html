@@ -91,11 +91,15 @@
         }
         #selection a{
             color:rgb(250,250,250);
-            text-decoration: none;
+            text-decoration: underline;
+            padding:1px;
         }
         #selection a:hover{
-            color:rgb(250,250,250);
+            color:rgb(50,50,50);
             text-decoration: underline;
+            background:#ccc;
+            text-shadow:none;
+            border-radius:1px;
         }
         .m{
             padding:4px;
@@ -223,7 +227,7 @@
         if(urlName[urlName.length-1] == "_"){ urlName = urlName.substring(0, urlName.length-1); }
 
 
-        txt+="( <a href=\"https://warframe.fandom.com/wiki/"+urlName+"\" target=\"_blank\">WIKI Link</a> ) ";
+        txt+="(<a href=\"https://warframe.fandom.com/wiki/"+urlName+"\" target=\"_blank\">Wiki Page</a>) ";
         txt+="<span class=\"s1\"><i>Shares Dispo With;</i> ";
 
         for( i=0; i<weaponsAlphabetical.length; i++ )
