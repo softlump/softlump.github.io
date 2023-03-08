@@ -175,8 +175,8 @@
                 <option value="R">Rifle</option>
                 <option value="S">Shotgun</option>
                 <option value="P">Pistol</option>
-                <option value="A">Archgun</option>
                 <option value="M">Melee</option>
+                <option value="A">Archgun</option>
             </select>
             <b>Positive</b>
             <select name="bonus" id="form_bonus">
@@ -994,7 +994,7 @@
         weaponsAlphabetical.sort();
 
         weaponsDispoOrder = [...weapons]; // https://holycoders.com/javscript-copy-array/
-        weaponsDispoOrder.sort( function ( a,b ) { return b.dispo - a.dispo } );
+        weaponsDispoOrder.sort( function ( a,b ) { return b.dispo - a.dispo } ); //https://stackoverflow.com/questions/5876424/sort-array-of-objects
 
         RenderWeaponList();
     }
@@ -1008,10 +1008,8 @@
     function RenderWeaponList()
     {
         var innerHTMLtext = "";
-        var sortTxt = " Sorting by Disposition";
-
-        if(sortAlphabetical){ sortTxt = " Sorting Alphabetical" }
-
+        var sortTxt = "Sorting by Disposition";
+        if(sortAlphabetical){ sortTxt = "Sorting Alphabetical" }
         innerHTMLtext += "<span onclick=\"SetSortingType()\">"+sortTxt+"</span>";
 
         if(sortAlphabetical)
@@ -1070,12 +1068,12 @@
                     }
                 }
             }
-            innerHTMLtext += "<h2>Archgun</h2>";
+            innerHTMLtext += "<h2>Melee</h2>";
             for( i=0; i<weaponsAlphabetical.length; i++ )
             {
                 for( ii=0; ii<weapons.length; ii++ )
                 {
-                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "A")
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "M")
                     {
                         if( weapons[ii].weaponName == selectedWeapon )
                         {
@@ -1088,12 +1086,12 @@
                     }
                 }
             }
-            innerHTMLtext += "<h2>Melee</h2>";
+            innerHTMLtext += "<h2>Archgun</h2>";
             for( i=0; i<weaponsAlphabetical.length; i++ )
             {
                 for( ii=0; ii<weapons.length; ii++ )
                 {
-                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "M")
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "A")
                     {
                         if( weapons[ii].weaponName == selectedWeapon )
                         {
@@ -1162,12 +1160,12 @@
                     }
                 }
             }
-            innerHTMLtext += "<h2>Archgun</h2>";
+            innerHTMLtext += "<h2>Melee</h2>";
             for( i=0; i<weaponsDispoOrder.length; i++ )
             {
                 for( ii=0; ii<weapons.length; ii++ )
                 {
-                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "A")
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "M")
                     {
                         if( weapons[ii].weaponName == selectedWeapon )
                         {
@@ -1180,12 +1178,12 @@
                     }
                 }
             }
-            innerHTMLtext += "<h2>Melee</h2>";
+            innerHTMLtext += "<h2>Archgun</h2>";
             for( i=0; i<weaponsDispoOrder.length; i++ )
             {
                 for( ii=0; ii<weapons.length; ii++ )
                 {
-                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "M")
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "A")
                     {
                         if( weapons[ii].weaponName == selectedWeapon )
                         {
