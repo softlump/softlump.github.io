@@ -137,7 +137,7 @@
             background-color:rgb(180,180,180);
         }
         span.avg{
-            color:rgb(170,170,170);
+            color:rgb(160,160,160);
             background-color:rgb(100,100,100);
             text-shadow: 1px 1px 1px rgb(10,10,10);
             font-weight:bold;
@@ -447,7 +447,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Zoom 
             txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
@@ -500,7 +500,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Zoom 
             txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
@@ -553,7 +553,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 49.45;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Punch Through 
             txt+=FormatString("Punch Through",dSpace)+"&nbsp;"; val = 2.7;
@@ -603,7 +603,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 49.45;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
 
             if( malus_mod == 0 ){ txt+="</span>"; }
@@ -654,7 +654,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Zoom 
             txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 80.1;
@@ -707,7 +707,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 50;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Zoom 
             txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
@@ -757,7 +757,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 99.9;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, bonus_mod, val, vSpace );
             // Zoom 
             txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
@@ -810,7 +810,7 @@
             txt+=FormatString("Reload Speed",dSpace)+"&nbsp;"; val = 99.9;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Weapon Recoil 
-            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = 90;
+            txt+=FormatString("Weapon Recoil",dSpace)+"&nbsp;"; val = -90;
             txt+=FormatRange( dispo, malus_mod, val, vSpace );
             // Zoom 
             txt+=FormatString("Zoom",dSpace)+"&nbsp;"; val = 59.99;
@@ -1077,7 +1077,7 @@
                 }
             }
         }
-
+        innerHTMLtext += "<h2><br>&nbsp;<br>&nbsp;<br>&nbsp;</h2>";
         document.getElementById("list").innerHTML = innerHTMLtext;
 
     }
