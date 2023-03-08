@@ -73,7 +73,20 @@
             margin:0;
             padding:0;
             padding-top:10px;
+            
         }
+        .weaponlist span {
+            font-size:12px;
+            cursor: pointer;
+            text-decoration:underline;
+        }
+        .weaponlist span:hover{
+            background:rgb(250,250,250);
+            color:rgb(50,50,50);
+            text-shadow:none;
+            border-radius:2px;
+        }
+
 
         #dispoForm select, input{
             font-family: 'Consolas', monospace;
@@ -980,103 +993,214 @@
 
         weaponsAlphabetical.sort();
 
+        weaponsDispoOrder = [...weapons]; // https://holycoders.com/javscript-copy-array/
+        weaponsDispoOrder.sort( function ( a,b ) { return b.dispo - a.dispo } );
+
+        RenderWeaponList();
+    }
+
+    function SetSortingType()
+    {
+        sortAlphabetical = !sortAlphabetical;
         RenderWeaponList();
     }
 
     function RenderWeaponList()
     {
         var innerHTMLtext = "";
+        var sortTxt = " Sorting by Disposition";
 
-        innerHTMLtext += "<h2>Rifle</h2>";
-        for( i=0; i<weaponsAlphabetical.length; i++ )
+        if(sortAlphabetical){ sortTxt = " Sorting Alphabetical" }
+
+        innerHTMLtext += "<span onclick=\"SetSortingType()\">"+sortTxt+"</span>";
+
+        if(sortAlphabetical)
         {
-            for( ii=0; ii<weapons.length; ii++ )
+            innerHTMLtext += "<h2>Rifle</h2>";
+            for( i=0; i<weaponsAlphabetical.length; i++ )
             {
-                if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "R")
+                for( ii=0; ii<weapons.length; ii++ )
                 {
-                    if( weapons[ii].weaponName == selectedWeapon )
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "R")
                     {
-                        innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
                     }
-                    else
+                }
+            }
+            innerHTMLtext += "<h2>Shotgun</h2>";
+            for( i=0; i<weaponsAlphabetical.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "S")
                     {
-                        innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                    }
+                }
+            }
+            innerHTMLtext += "<h2>Pistol</h2>";
+            for( i=0; i<weaponsAlphabetical.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "P")
+                    {
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                    }
+                }
+            }
+            innerHTMLtext += "<h2>Archgun</h2>";
+            for( i=0; i<weaponsAlphabetical.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "A")
+                    {
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                    }
+                }
+            }
+            innerHTMLtext += "<h2>Melee</h2>";
+            for( i=0; i<weaponsAlphabetical.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "M")
+                    {
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        }
                     }
                 }
             }
         }
-        innerHTMLtext += "<h2>Shotgun</h2>";
-        for( i=0; i<weaponsAlphabetical.length; i++ )
-        {
-            for( ii=0; ii<weapons.length; ii++ )
+        else{
+            innerHTMLtext += "<h2>Rifle</h2>";
+            for( i=0; i<weaponsDispoOrder.length; i++ )
             {
-                if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "S")
+                for( ii=0; ii<weapons.length; ii++ )
                 {
-                    if( weapons[ii].weaponName == selectedWeapon )
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "R")
                     {
-                        innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
                     }
-                    else
+                }
+            }
+            innerHTMLtext += "<h2>Shotgun</h2>";
+            for( i=0; i<weaponsDispoOrder.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "S")
                     {
-                        innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                    }
+                }
+            }
+            innerHTMLtext += "<h2>Pistol</h2>";
+            for( i=0; i<weaponsDispoOrder.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "P")
+                    {
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                    }
+                }
+            }
+            innerHTMLtext += "<h2>Archgun</h2>";
+            for( i=0; i<weaponsDispoOrder.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "A")
+                    {
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                    }
+                }
+            }
+            innerHTMLtext += "<h2>Melee</h2>";
+            for( i=0; i<weaponsDispoOrder.length; i++ )
+            {
+                for( ii=0; ii<weapons.length; ii++ )
+                {
+                    if(weaponsDispoOrder[i].weaponName == weapons[ii].weaponName && weapons[ii].weaponType == "M")
+                    {
+                        if( weapons[ii].weaponName == selectedWeapon )
+                        {
+                            innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
+                        else
+                        {
+                            innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsDispoOrder[i].weaponName+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsDispoOrder[i].weaponName+"("+ weapons[ii].dispo +")</a>";
+                        }
                     }
                 }
             }
         }
-        innerHTMLtext += "<h2>Pistol</h2>";
-        for( i=0; i<weaponsAlphabetical.length; i++ )
-        {
-            for( ii=0; ii<weapons.length; ii++ )
-            {
-                if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "P")
-                {
-                    if( weapons[ii].weaponName == selectedWeapon )
-                    {
-                        innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    }
-                    else
-                    {
-                        innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    }
-                }
-            }
-        }
-        innerHTMLtext += "<h2>Archgun</h2>";
-        for( i=0; i<weaponsAlphabetical.length; i++ )
-        {
-            for( ii=0; ii<weapons.length; ii++ )
-            {
-                if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "A")
-                {
-                    if( weapons[ii].weaponName == selectedWeapon )
-                    {
-                        innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    }
-                    else
-                    {
-                        innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    }
-                }
-            }
-        }
-        innerHTMLtext += "<h2>Melee</h2>";
-        for( i=0; i<weaponsAlphabetical.length; i++ )
-        {
-            for( ii=0; ii<weapons.length; ii++ )
-            {
-                if(weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].weaponType == "M")
-                {
-                    if( weapons[ii].weaponName == selectedWeapon )
-                    {
-                        innerHTMLtext += "<a href=\"#\" class=\"h\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    }
-                    else
-                    {
-                        innerHTMLtext += "<a href=\"#\" onclick=\"WeaponSelect(\'"+weaponsAlphabetical[i]+"\', \'"+weapons[ii].dispo+"\', \'"+weapons[ii].weaponType+"\');\">"+weaponsAlphabetical[i]+"("+ weapons[ii].dispo +")</a>";
-                    }
-                }
-            }
-        }
+
+        
         innerHTMLtext += "<h2><br>&nbsp;<br>&nbsp;<br>&nbsp;</h2>";
         document.getElementById("list").innerHTML = innerHTMLtext;
 
@@ -1085,8 +1209,10 @@
 
 var weapons = [];
 var weaponsAlphabetical = [];
+var weaponsDispoOrder = [];
 var selectedWeapon = "";
 var alternate = 0;
+var sortAlphabetical = true;
 
 DispositionUpdates();
 SortWeaponList();
