@@ -13,7 +13,9 @@
     <meta property="og:url" content="https://softlump.github.io/dispo" />
 
     <link rel="icon" type="image/png" href="fav.png" sizes="16x16" />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap" rel="stylesheet">
     <style>
 
         html {
@@ -68,16 +70,17 @@
         }
         .weaponlist h2 {
             clear:left;
-            font-family: 'Consolas', monospace;
-            font-size: 15px;
-            font-weight: bold;
+            font-family: 'Cairo', sans-serif;
+            font-size: 22px;
+            font-weight:lighter ;
             margin:0;
             padding:0;
-            padding-top:10px;
-            
+            border:0;
+            padding-top:15px;
         }
         .weaponlist span {
             font-size:12px;
+            padding:1px;
             cursor: pointer;
             text-decoration:underline;
         }
@@ -1034,13 +1037,14 @@
     function RenderWeaponList()
     {
         var innerHTMLtext = "";
+        innerHTMLtext+="&nbsp;<br>";
         var sortTxt = "Sorting by Disposition";
         if(sortAlphabetical){ sortTxt = "Sorting Alphabetical" }
         innerHTMLtext += "<span onclick=\"SetSortingType()\">"+sortTxt+"</span>";
 
         if(sortAlphabetical)
         {
-            innerHTMLtext += "<h2>Rifle</h2>";
+            innerHTMLtext += "<h2 style=\"padding-top:2px;\">Rifle</h2>";
             for( i=0; i<weaponsAlphabetical.length; i++ )
             {
                 for( ii=0; ii<weapons.length; ii++ )
@@ -1132,7 +1136,7 @@
             }
         }
         else{
-            innerHTMLtext += "<h2>Rifle</h2>";
+            innerHTMLtext += "<h2 style=\"padding-top:2px;\">Rifle</h2>";
             for( i=0; i<weaponsDispoOrder.length; i++ )
             {
                 for( ii=0; ii<weapons.length; ii++ )
