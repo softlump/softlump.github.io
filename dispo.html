@@ -268,28 +268,27 @@
     <div class="autocomplete" style="width:240px;">
         <input id="myInput" type="text" name="weaponSelectList" placeholder="Weapon">
     </div>
-    <br>
     <form action="" oninput="FormChange()" id="form">
-            <select name="type" id="form_type">
-                <option value="R">Rifle</option>
-                <option value="S">Shotgun</option>
-                <option value="P">Pistol</option>
-                <option value="M">Melee</option>
-                <option value="A">Archgun</option>
-            </select>
-            <b>Positive</b>
-            <select name="bonus" id="form_bonus">
-                <option value="3">3</option>
-                <option value="2">2</option>
-            </select>
-            <b>Negative</b>
-            <select name="malus" id="form_malus">
-                <option value="1">1</option>
-                <option value="0">0</option>
-            </select>
-            <b>Disposition</b>
-            <input type="text" name="dispo" id="form_dispo" maxlength="5" value="0" />
-        </form>
+        <select name="type" id="form_type">
+            <option value="R">Rifle</option>
+            <option value="S">Shotgun</option>
+            <option value="P">Pistol</option>
+            <option value="M">Melee</option>
+            <option value="A">Archgun</option>
+        </select>
+        <b>Positive</b>
+        <select name="bonus" id="form_bonus">
+            <option value="3">3</option>
+            <option value="2">2</option>
+        </select>
+        <b>Negative</b>
+        <select name="malus" id="form_malus">
+            <option value="1">1</option>
+            <option value="0">0</option>
+        </select>
+        <b>Disposition</b>
+        <input type="text" name="dispo" id="form_dispo" maxlength="5" value="0" />
+    </form>
 </div>
 <div id="selection" class="m"></div>
 <div id="stats" class="m big"></div>
@@ -349,21 +348,7 @@
 
 
         txt+="(<a href=\"https://warframe.fandom.com/wiki/"+urlName+"\" target=\"_blank\">Wiki Page</a>) ";
-        txt+="<span class=\"s1\"><i>Shares Dispo With;</i> ";
 
-        for( i=0; i<weaponsAlphabetical.length; i++ )
-        {
-            for( ii=0; ii<weapons.length; ii++ )
-            {
-                if( weaponsAlphabetical[i] == weapons[ii].weaponName && weapons[ii].dispo == d && weaponsAlphabetical[i] != n )
-                {
-                    txt += weapons[ii].weaponName;
-                    txt += ", ";
-                }
-            }
-        }
-        txt = txt.substring(0,txt.length-2);
-        txt += "</span>";
         document.getElementById("selection").innerHTML = txt;
         RenderWeaponList();
         FormChange();
