@@ -266,7 +266,7 @@
 <div id="patch"></div>
 <div id="formdiv" autocomplete="off" class="m">
     <div class="autocomplete" style="width:240px;">
-        <input id="myInput" type="text" name="weaponSelectList" placeholder="Weapon">
+        <input id="myInput" type="text" name="weaponSelectList" onClick="this.setSelectionRange(0, this.value.length)" placeholder="Weapon">
     </div>
     <form action="" oninput="FormChange()" id="form">
         <select name="type" id="form_type">
@@ -1242,6 +1242,9 @@
             if (currentFocus > -1) {
                 /*and simulate a click on the "active" item:*/
                 if (x) x[currentFocus].click();
+            }
+            else{
+                x[0].click();
             }
         }
     });
