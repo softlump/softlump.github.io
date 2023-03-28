@@ -111,7 +111,7 @@
             margin-top:15px;
             margin-bottom:-16px;
         }
-
+        #form{float:left;}
         #dispoForm select, input{
             font-family: 'Consolas', monospace;
             border:0;
@@ -146,12 +146,14 @@
         }
         #formdiv{
             margin:2px 0;
+            height:auto;
         }
         #patch{
             background:rgb(145,145,145);
             padding:4px;
         }
         #selection{
+            clear:left;
             overflow:hidden;
             height:20px;
         }
@@ -216,7 +218,7 @@
         }
 
         #myInput{
-            width:240px;
+            width:200px;
             height:20px;
             margin-bottom:5px;
             background:rgb(230,230,230);
@@ -228,6 +230,8 @@
             /*the container must be positioned relative:*/
             position: relative;
             display: inline-block;
+            float:left;
+            margin-right:5px;
         }
         .autocomplete-items {
             position: absolute;
@@ -265,7 +269,7 @@
 <body>
 <div id="patch"></div>
 <div id="formdiv" autocomplete="off" class="m">
-    <div class="autocomplete" style="width:240px;">
+    <div class="autocomplete" style="width:200px;">
         <input id="myInput" type="text" name="weaponSelectList" onClick="this.setSelectionRange(0, this.value.length)" placeholder="Weapon">
     </div>
     <form action="" oninput="FormChange()" id="form">
