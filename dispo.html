@@ -402,6 +402,11 @@
                 if(!exists)
                 {
                     weapons.push( new Weapon( tmpName, tmpDispo, tmpType ) ); 
+                    if( tmpType == "R"){ rCount++; }
+                    if( tmpType == "S"){ sCount++; }
+                    if( tmpType == "P"){ pCount++; }
+                    if( tmpType == "A"){ aCount++; }
+                    if( tmpType == "M"){ mCount++; }
                 }
                 
                 nameSet = false;
@@ -1083,11 +1088,11 @@
             if(displayBlob){ innerHTMLtext += "<div class=\"w\">"; }
             else{            innerHTMLtext += "<div class=\"t\">"; }
 
-            if( typeOrder[t] == "R" ){ innerHTMLtext += "<h2>Rifle</h2>"; }
-            if( typeOrder[t] == "S" ){ innerHTMLtext += "<h2>Shotgun</h2>"; }
-            if( typeOrder[t] == "P" ){ innerHTMLtext += "<h2>Pistol</h2>";}
-            if( typeOrder[t] == "M" ){ innerHTMLtext += "<h2>Melee</h2>";}
-            if( typeOrder[t] == "A" ){ innerHTMLtext += "<h2>Archgun</h2>";}
+            if( typeOrder[t] == "R" ){ innerHTMLtext += "<h2>Rifle ("+rCount+")</h2>"; }
+            if( typeOrder[t] == "S" ){ innerHTMLtext += "<h2>Shotgun ("+sCount+")</h2>"; }
+            if( typeOrder[t] == "P" ){ innerHTMLtext += "<h2>Pistol ("+pCount+")</h2>";}
+            if( typeOrder[t] == "M" ){ innerHTMLtext += "<h2>Melee ("+mCount+")</h2>";}
+            if( typeOrder[t] == "A" ){ innerHTMLtext += "<h2>Archgun ("+aCount+")</h2>";}
 
             for( i=0; i<arrayOrder.length; i++ )
             {
@@ -1125,6 +1130,12 @@ var selectedWeapon = "";
 var alternate = 0;
 var sortAlphabetical = false;
 var displayBlob = false;
+
+var rCount = 0;
+var sCount = 0;
+var pCount = 0;
+var aCount = 0;
+var mCount = 0;
 
 DispositionUpdates();
 SortWeaponList();
