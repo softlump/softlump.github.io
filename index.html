@@ -472,15 +472,15 @@
         }
 
         // Calculate Proportions
-        total_entries = ghost + shadow + storm + mountain + moon + unclear;
+        total_entries = ghost + shadow + storm + mountain + moon;
         prop_pc = Math.round( pc/total_entries*100 );
         prop_ps = Math.round( ps/total_entries*100 );
         prop_xb = Math.round( xb/total_entries*100 );
         prop_sw = Math.round( sw/total_entries*100 );
 
-        prop_w1 = Math.round( week1/total_entries*100 );
-        prop_w2 = Math.round( week2/total_entries*100 );
-        prop_w3 = Math.round( week3/total_entries*100 );
+        prop_w1 = Math.round( week1/(total_entries+unclear)*100 );
+        prop_w2 = Math.round( week2/(total_entries+unclear)*100 );
+        prop_w3 = Math.round( week3/(total_entries+unclear)*100 );
 
         prop_gh = Math.round( ghost/total_entries*100 );
         prop_sh = Math.round( shadow/total_entries*100 );
