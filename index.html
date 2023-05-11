@@ -302,7 +302,7 @@
         txt = PrintHeader( contest, size );
         for( x=0;x<maxdays;x++){ txt += PrintDayBreakdown( contest, days[x], x+1, size, entries, maxdays, sum ); }
         document.getElementById(contest).innerHTML = txt;
-        document.getElementById(contest+"_DATA").innerHTML = PrintContestData(contest,entries);
+        document.getElementById(contest+"_DATA").innerHTML = PrintContestData(contest,entries,maxdays);
     }
 
     function PrintHeader( title, size )
@@ -398,7 +398,7 @@
 
         return txt;
     }
-    function PrintContestData( contest, allEntries )
+    function PrintContestData( contest, allEntries, daycount )
     {
         var pc = 0;
         var ps = 0;
@@ -451,6 +451,16 @@
         var week2 = 0;
         var week3 = 0;
 
+        var week_length = 0;
+        var midpoint_start = 0;
+        var midpoint_end = 0;
+        var final_week_start = 0;
+// wierd stuff to get breakdowns for starting and ending half comparisons for entry count.
+        week_length = Math.floor(daycount/2);
+        midpoint_start = Math.round(week_length/2)+1;
+        midpoint_end = (midpoint_start + week_length)-1;
+        final_week_start = (daycount - Math.ceil(daycount/2)+1);
+
         for( i=0;i<allEntries.length;i++)
         {
             if( allEntries[i].contest == contest )
@@ -465,9 +475,9 @@
                 if( allEntries[i].tier == "mt" ){ mountain++; }
                 if( allEntries[i].tier == "mo" ){ moon++; }
                 if( allEntries[i].tier == "xx" ){ unclear++; }
-                if( allEntries[i].day <= 7  ){ week1++;}
-                if( allEntries[i].day >= 5 && allEntries[i].day <= 11 ){ week2++;}
-                if( allEntries[i].day >= 8 ){ week3++;}
+                if( allEntries[i].day <= week_length ){ week1++;}
+                if( allEntries[i].day >= midpoint_start && allEntries[i].day <= midpoint_end ){ week2++;}
+                if( allEntries[i].day >= final_week_start ){ week3++;}
             }
         }
 
@@ -538,7 +548,7 @@
         }
 
 
-        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Week (1-7):&nbsp;&nbsp;<b>"+week1+"&nbsp;<span class=\"shade2\">"+prop_w1+"</span></b><br>Middle-week (5-11):<b>"+week2+"&nbsp;<span class=\"shade2\">"+prop_w2+"</span></b><br>Last Week (8-"+maxdays+"):&nbsp;&nbsp;<b>"+week3+"&nbsp;<span class=\"shade2\">"+prop_w3+"</span></b>";
+        return "Totals by Platform;<span class=\"shade\">&nbsp;&nbsp;&nbsp;GH&nbsp;&nbsp;SH&nbsp;&nbsp;ST&nbsp;&nbsp;MT&nbsp;&nbsp;MO</span><br>PC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+pc+"</b><span class=\"shade\">"+pc_gh+pc_sh+pc_st+pc_mt+pc_mo+"<span class=\"shade2\">&nbsp;"+prop_pc+"</span></span><br>PlayStation:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ps+"</b><span class=\"shade\">"+ps_gh+ps_sh+ps_st+ps_mt+ps_mo+"<span class=\"shade2\">&nbsp;"+prop_ps+"</span></span><br>Xbox:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+xb+"</b><span class=\"shade\">"+xb_gh+xb_sh+xb_st+xb_mt+xb_mo+"<span class=\"shade2\">&nbsp;"+prop_xb+"</span></span><br>Nintendo Switch:<b>"+sw+"</b><span class=\"shade\">"+sw_gh+sw_sh+sw_st+sw_mt+sw_mo+"<span class=\"shade2\">&nbsp;"+prop_sw+"</span></span><br><span class=\"shade2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+prop_gh+prop_sh+prop_st+prop_mt+prop_mo+"</span><br>Totals by Tier;<br>Ghost:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+ghost+"</b><br>Shadow:&nbsp;&nbsp;&nbsp;<b>"+shadow+"</b><br>Storm:&nbsp;&nbsp;&nbsp;&nbsp;<b>"+storm+"</b><br>Mountain:&nbsp;<b>"+mountain+"</b><br>Moon:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"+moon+"</b>"+unclear_txt+"<br><br>First Half (1-"+week_length+"):&nbsp;<b>"+week1+"&nbsp;<span class=\"shade2\">"+prop_w1+"</span></b><br>Middle ("+midpoint_start+"-"+midpoint_end+"):&nbsp;&nbsp;&nbsp;&nbsp;<b>"+week2+"&nbsp;<span class=\"shade2\">"+prop_w2+"</span></b><br>Last Half ("+final_week_start+"-"+maxdays+"):&nbsp;<b>"+week3+"&nbsp;<span class=\"shade2\">"+prop_w3+"</span></b>";
     }
 
     var entries = [];
