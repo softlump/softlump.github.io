@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap" rel="stylesheet">
     <style>
         html {
-            background:rgb(74,74,74);
+            background:rgb(70,70,70);
             min-width:410px;
         }
         body {           
@@ -31,7 +31,7 @@
             left:0;
             width: 100%;
             height: auto;
-            background:rgb(74,74,74);
+            background:rgb(70,70,70);
             color:rgb(220,220,220);
             /*overflow:visible;*/
         }
@@ -167,7 +167,7 @@
             text-decoration: underline;
             background:#ccc;
             text-shadow:none;
-            border-radius:1px;
+            border-radius:2px;
         }
         .m{
             padding:4px;
@@ -183,37 +183,38 @@
         }
 
         span.min{
-            color:rgb(20,20,20);
-            background-color:rgb(170,170,170);
-            text-shadow: 1px 1px 1px rgb(200,200,200);
+            color:rgb(50,50,50);
+            background-color:rgb(220,220,220);
+            text-shadow:none;
             font-weight:bold;
             margin-left:-1px;
-            border-top:1px solid rgb(74,74,74);
+            border:1px solid rgb(70,70,70);
         }
         span.min2{
-            background-color:rgb(150,150,150);
+            background-color:rgb(190,190,190);
         }
         span.max{
-            color:rgb(20,20,20);
-            background-color:rgb(230,230,230);
-            text-shadow: 1px 1px 1px rgb(255,255,255);
+            color:rgb(50,50,50);
+            background-color:rgb(220,220,220);
+            text-shadow: none;
             font-weight:bold;
-            border-right:1px solid rgb(74,74,74);
-            border-left:1px solid rgb(74,74,74);
-            border-top:1px solid rgb(74,74,74);
+            margin-left:-1px;
+            border:1px solid rgb(70,70,70);
         }
         span.max2{
-            background-color:rgb(210,210,210);
+            background-color:rgb(190,190,190);
         }
         span.avg{
-            color:rgb(220,220,220);
-            background-color:rgb(130,130,130);
-            text-shadow: 1px 1px 1px rgb(10,10,10);
+            color:rgb(200,200,200);
+            background-color:rgb(120,120,120);
+            /*text-shadow: 1px 1px 1px rgb(10,10,10);*/
+            text-shadow:1px 1px 1px rgb(60,60,60);
             font-weight:normal;
-            border-top:1px solid rgb(74,74,74);
+            margin-left:-1px;
+            border:1px solid rgb(70,70,70);
         }
         span.avg2{
-            background-color:rgb(110,110,110);
+            background-color:rgb(100,100,100);
         }
 
         #myInput{
@@ -501,7 +502,7 @@
 
         dispo = Math.min(Math.max(dispo, 0.5), 1.55);
 
-        var vSpace = 6;
+        var vSpace = 7;
         var dSpace = 24;
 
         if( bonus == 2 && malus == 0){ bonus_mod = 0.99; malus_mod = 0; }
@@ -527,7 +528,7 @@
         headtxt+=" +"+bonus+"/-"+malus+"<br>";
 
         txt+=headtxt;
-        txt+=""+Spaces(dSpace)+"&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
+        txt+=""+Spaces(dSpace)+"&nbsp;&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avg<br>";
 
         if( category == "R" ) // Rifle
         {
