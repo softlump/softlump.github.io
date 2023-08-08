@@ -131,7 +131,7 @@
         <div class="container" id="summer2023">
             <div id="SUMMER_2023" class="contest_display">txt</div>
             <div id="SUMMER_2023_DATA" class="contest_data txt_shadow">...</div>
-            <div class="contest_link txt_shadow">Links:<br><a href="" target="_blank">Star Chart Dojo Showcase - Summer 2023 Thread</a><br>Guest Judge:<br><br><a href="#summer2023" class="shade2">Link to this entry</a><br>&nbsp;</div>
+            <div class="contest_link txt_shadow">Links:<br><a href="https://forums.warframe.com/topic/1361135-star-chart-dojo-showcase-summer-2023/" target="_blank">Star Chart Dojo Showcase - Summer 2023 Thread</a><br>Guest Judge: ElJuliex(NSW)<br><br><a href="#summer2023" class="shade2">Link to this entry</a><br>&nbsp;</div>
         </div>
 
         <div class="container" id="spring2023">
@@ -2150,8 +2150,12 @@
     entries.push( new Entry("SPRING_2023", 16, "pc", "st") );//Bab2mars
 
 // ############################################################################## SUMMER 2023 ########
+    entries.push( new Entry("SUMMER_2023", 1, "pc", "gh") );//KIREEK
+    entries.push( new Entry("SUMMER_2023", 2, "pc", "mt") );//SuKen
+    entries.push( new Entry("SUMMER_2023", 2, "ps", "gh") );//(PSN)BloodyHell
+    entries.push( new Entry("SUMMER_2023", 2, "pc", "mo") );//DrLego
 
-    //entries.push( new Entry("SUMMER_2023", 16, "pc", "gh") );//
+    //entries.push( new Entry("SUMMER_2023", 2, "pc", "gh") );//
 
     var size = 30; // Chart Length/Column count, can be set individually for a given contest as well.
     var sum = 0; // global gets reset at times; Tracking SUM of entires for a given contest, used by PrintDayBreakdown().
@@ -2165,6 +2169,7 @@
         The array in RenderContestInfo is a simple manual list of the dates to avoid using a dedicated calendar class, its used to determine the row count. String length matters, is used directly and will mess with alignment.
         RenderContestInfo("NAME", ["day 01", "day 02", "day 03"], size);
     */
+    RenderContestInfo("SUMMER_2023", ["Aug 07", "Aug 08", "Aug 09", "Aug 10", "Aug 11", "Aug 12", "Aug 13", "Aug 14", "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19", "Aug 20", "Aug 21", "Aug 22", "Aug 23", "Aug 24"], size);//TUE
     RenderContestInfo("SPRING_2023", ["May 04", "May 05", "May 06", "May 07", "May 08", "May 09", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16", "May 17", "May 18", "May 19"], size);//TH
     RenderContestInfo("WINTER_2023", ["Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18", "Feb 19", "Feb 20", "Feb 21", "Feb 22", "Feb 23", "Feb 24"], size);//FR
     RenderContestInfo("AUTUMN_2022", ["Nov 10", "Nov 11", "Nov 12", "Nov 13", "Nov 14", "Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21", "Nov 22", "Nov 23", "Nov 24", "Nov 25"], size);//TH
