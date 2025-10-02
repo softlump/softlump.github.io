@@ -306,6 +306,7 @@
             this.weaponName = weaponName;
             this.dispo = dispo;
             this.weaponType = weaponType;
+            this.change = "["+dispo.toString()+"]";
         }
     }
 
@@ -316,17 +317,18 @@
         {
             if( weapons[i].weaponName == n )
             {
-                WeaponSelect( weapons[i].weaponName, weapons[i].dispo, weapons[i].weaponType )
+                WeaponSelect( weapons[i].weaponName, weapons[i].dispo, weapons[i].weaponType, weapons[i].change )
                 break;
             }
         }
     }
 
-    function WeaponSelect( n, d, t )
+    function WeaponSelect( n, d, t, c )
     {
         var wpnType = "???";
 
         selectedWeapon = n;
+        selectedWeaponChange = c;
 
         if( t == "R" ) wpnType = "Rifle";
         if( t == "S" ) wpnType = "Shotgun";
@@ -351,7 +353,7 @@
         if(urlName[urlName.length-1] == "_"){ urlName = urlName.substring(0, urlName.length-1); }
 
 
-        txt+="(<a href=\"https://warframe.fandom.com/wiki/"+urlName+"\" target=\"_blank\">Wiki Page</a>) ";
+        txt+="(<a href=\"https://wiki.warframe.com/w/"+urlName+"\" target=\"_blank\">Wiki Page</a>) ";
 
         document.getElementById("selection").innerHTML = txt;
         RenderWeaponList();
@@ -462,6 +464,7 @@
                         {
                             //update current entry
                             weapons[ii].dispo = tmpDispo;
+                            weapons[ii].change += "["+tmpDispo+"]";
                             weapons[ii].weaponType = tmpType;
                             exists = true;
                             break;
@@ -469,7 +472,7 @@
                     }
                 }
             
-                if(!exists)
+                if(!exists)//create new entry
                 {
                     weapons.push( new Weapon( tmpName, tmpDispo, tmpType ) ); 
                     if( tmpType == "R"){ rCount++; }
@@ -1051,6 +1054,7 @@
             if( malus_mod == 0 ){ txt+="</span>"; }
             txt+="<br>";
             txt+="<br>";
+            //txt+=selectedWeaponChange;
             txt+="<br>";
         }
         document.getElementById("stats").innerHTML = txt;
@@ -1304,6 +1308,7 @@ var weapons = [];
 var weaponsAlphabetical = [];
 var weaponsDispoOrder = [];
 var selectedWeapon = "";
+var selectedWeaponChange = "";
 var alternate = 0;
 var sortAlphabetical = false;
 var displayBlob = false;
